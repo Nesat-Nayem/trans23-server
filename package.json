@@ -1,0 +1,47 @@
+{
+  "name": "trans23",
+  "version": "1.0.0",
+  "description": "cool app",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js",
+    "start-dev": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Nesat-Nayem/tbackend.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Nesat-Nayem/tbackend.git"
+  },
+  "homepage": "",
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.352.0",
+    "bcrypt": "^5.1.0",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.1",
+    "ejs": "^3.1.8",
+    "express": "^4.17.2",
+    "firebase-admin": "^11.7.0",
+    "html-pdf": "^3.0.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongodb": "^4.3.1",
+    "mongoose": "^5.12.2",
+    "multer": "^1.4.5-lts.1",
+    "node-fetch": "^2.6.11",
+    "nodemailer": "^6.8.0",
+    "nodemon": "^2.0.22",
+    "otp-generator": "^3.0.0",
+    "path": "^0.12.7",
+    "slugify": "^1.6.5",
+    "socket.io": "^4.6.0",
+    "stripe": "^8.191.0",
+    "urlencode": "^1.1.0",
+    "validator": "^13.7.0"
+  }
+}
