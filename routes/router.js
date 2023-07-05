@@ -74,6 +74,7 @@ const { vendorVehicleHandalar } = require("../controllers/vendor/vendorVehicleCo
 const S3ImageUploader = require("../controllers/awsImageUploader");
 const vendorDashboardHandalar = require("../controllers/vendor/vendorDashboardController");
 const { vendorSelectedServiceHandalar } = require("../controllers/vendor/vendorSelectedServiceControllers");
+const { paymentmanage, paymentresponse } = require("../controllers/payment/paymentController");
 
 
 
@@ -281,6 +282,10 @@ router.post("/vendor/selected-service", vendorSelectedServiceHandalar)
 
 
 router.get("/vendor/earning", getvendorbalance)
+
+
+router.post("/payment/pay",paymentmanage )
+router.post("/payment/response",paymentresponse )
 
 
 
