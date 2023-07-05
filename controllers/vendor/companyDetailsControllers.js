@@ -7,29 +7,10 @@ const vendorCompanyDetailsHandalar = async (req, res) => {
   try {
     if (req.method === "POST") {
 
-      let vendordata = {
-        "_id": req.body.userId,
-        "name": "Sky Fly",
-        "contract": "3453434545",
-        "alt_contract": "546456546565",
-        "address": "new len",
-        "city": "dubai",
-        "state": "no state",
-        "pincode": "345454",
-        "adhar_no": "34534545353434",
-        "company_document": "file url",
-        "gstin_no": "back url",
-        "pan_no": "93485748957",
-        "bank": {
-          "bank_name": "state bank",
-          "ac_holder_name": "david",
-          "ac_no": "jkflsje34",
-          "ifsc_code": "lskdjfk34"
-        }
-      }
+    
 
-      const applience = new CompanyDetails(vendordata);
-      const result = await applience.save();
+      const companydetails = new CompanyDetails(req.body);
+      const result = await companydetails.save();
       res.status(200).json({
         success: true,
         message: "company details added",
@@ -39,15 +20,15 @@ const vendorCompanyDetailsHandalar = async (req, res) => {
 
     } else if (req.method === "GET") {
       const userId = req.query.userId;
-      const applience = await CompanyDetails.findOne({ userId });
+      const companydetails = await CompanyDetails.findOne({ userId });
 
 
-      if (applience) {
+      if (companydetails) {
         // id found, data send
         res.status(200).json({
           success: true,
           message: "vendor service retrieved",
-          data: applience,
+          data: companydetails,
         });
       } else {
         // id not found, error message send
@@ -64,21 +45,21 @@ const vendorCompanyDetailsHandalar = async (req, res) => {
       const query = req.query.objectId || "";
       // const query = _id ? { _id } : {};
 
-      const applience = await CompanyDetails.findByIdAndUpdate(query, req.body, { new: true });
+      const companydetails = await CompanyDetails.findByIdAndUpdate(query, req.body, { new: true });
       res.status(200).json({
         success: true,
         message: "updated success",
-        data: applience,
+        data: companydetails,
       });
     } else if (req.method === "DELETE") {
       // const { _id } = req.body;
       const objectId = req.query.objectId || "";
       // const query = userId ? { userId } : {};
-      const applience = await CompanyDetails.findByIdAndDelete(objectId);
+      const companydetails = await CompanyDetails.findByIdAndDelete(objectId);
       res.status(200).json({
         success: true,
         message: " delete success",
-        data: applience,
+        data: companydetails,
       });
     }
 
