@@ -94,6 +94,26 @@ exports.vendorRegister = (req, res, next) => {
     });
   };
   
+  exports.getVendor = async(req,res)=>{
+    const userId = req.query.userId;
+    const vendordetails = await Vendor.findOne({ userId });
+    if (vendordetails) {
+      // id found, data send
+      res.status(200).json({
+        success: true,
+        message: "data get success",
+        data: vendordetails,
+      });
+    } else {
+      // id not found, error message send
+      res.status(404).json({
+        success: false,
+        message: "Not Found",
+    
+      });
+    }
+
+  }
 
 
 exports.vendorLogin = async (req, res) => {
