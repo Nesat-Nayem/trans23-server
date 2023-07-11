@@ -286,7 +286,7 @@ router.get("/vendor/earning", getvendorbalance)
 
 
 router.post("/payment/pay",paymentmanage )
-router.post("/payment/response",paymentresponse )
+router.get("/payment/response",paymentresponse )
 
 
 

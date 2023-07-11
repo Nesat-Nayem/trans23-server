@@ -1,18 +1,19 @@
 const Payment = require("../../models/payment/paymentModel")
-// const axios = require('axios');
 const fetch = require('node-fetch');
 const crypto = require('crypto');
 
 const paymentmanage = async (req, res) => {
-
+    const test = req.body.test;
     const data = {
-        merchantId: process.env.MARCENT_ID,
+        // merchantId: process.env.MARCENT_ID,
+        merchantId: test ? 'MERCHANTUAT' : process.env.MARCENT_ID,
         merchantTransactionId: req.body.transection_id, // Replace with your own function to generate unique IDs
         merchantUserId: 'jlkjkoeirue',
         amount: req.body.amount * 100,
-        redirectUrl: `http://transserver-env.eba-ieqecsf3.ap-south-1.elasticbeanstalk.com//api/payment/response?status=success&transactionId=${req.body.transection_id}`,
-        redirectMode: 'POST',
-        callbackUrl: 'http://transserver-env.eba-ieqecsf3.ap-south-1.elasticbeanstalk.com//api/payment/response',
+        redirectUrl: test ? `http://transserver-env.eba-ieqecsf3.ap-south-1.elasticbeanstalk.com/api/payment/response?test=${req.body.test}&transactionId=${req.body.transection_id}` : `http://transserver-env.eba-ieqecsf3.ap-south-1.elasticbeanstalk.com/api/payment/response?test=${req.body.test}&transactionId=${req.body.transection_id}`,
+        redirectMode: 'GET',
+        callbackUrl: test ? 'http://transserver-env.eba-ieqecsf3.ap-south-1.elasticbeanstalk.com/payment/response'
+            : 'http://transserver-env.eba-ieqecsf3.ap-south-1.elasticbeanstalk.com/api/payment/response',
         mobileNumber: '9021557095',
         paymentInstrument: {
             type: 'PAY_PAGE'
@@ -20,7 +21,8 @@ const paymentmanage = async (req, res) => {
     };
 
     const encoded_data = Buffer.from(JSON.stringify(data)).toString('base64');
-    const salt_key = process.env.MARCENT_KEY;
+    // const salt_key = process.env.MARCENT_KEY;
+    const salt_key = test ? '099eb0cd-02cf-4e2a-8aca-3e6c6aff0399' : process.env.MARCENT_KEY;
     const salt_index = 1;
     const string_encoded = encoded_data + '/pg/v1/pay' + salt_key;
     const encoded_string = crypto.createHash('sha256').update(string_encoded).digest('hex');
@@ -28,18 +30,9 @@ const paymentmanage = async (req, res) => {
     try {
 
 
-        // const response = await axios.post('https://api.phonepe.com/apis/hermes/pg/v1/pay', { // Replace with actual production API URL
-        //     request: encoded_data
-        // }, {
-        //     headers: {
-        //         'X-VERIFY': final_xheader,
-        //         'Content-Type': 'application/json'
-        //     }
-        // });
 
-        // const payment_url = response.data.data.instrumentResponse.redirectInfo.url;
-
-        const response = await fetch('https://api.phonepe.com/apis/hermes/pg/v1/pay', {
+        // const response = await fetch('https://api.phonepe.com/apis/hermes/pg/v1/pay', {
+        const response = await fetch(test ? 'https://api-preprod.phonepe.com/apis/merchant-simulator/pg/v1/pay' : 'https://api.phonepe.com/apis/hermes/pg/v1/pay', {
             method: 'POST',
             body: JSON.stringify({ request: encoded_data }),
             headers: {
@@ -53,7 +46,6 @@ const paymentmanage = async (req, res) => {
 
         console.log(payment_url)
 
-        // res.redirect(payment_url);
 
         res.json({
             success: true,
@@ -63,8 +55,8 @@ const paymentmanage = async (req, res) => {
     } catch (error) {
         console.error('An error occurred:', error);
         res.status(500).json({
-            message:'Payment failed',
-            success:false
+            message: 'Payment failed',
+            success: false
         });
     }
 
@@ -74,12 +66,16 @@ const paymentmanage = async (req, res) => {
 
 
 const paymentresponse = async (req, res) => {
-    const status = req.query.status;
+    const test = req.query.test;
     const transactionId = req.query.transactionId;
-    console.log("check", status, transactionId)
-    const merchantId = process.env.MARCENT_ID;
-    const apiUrl = `https://api.phonepe.com/apis/hermes/pg/v1/status/${merchantId}/${transactionId}`;
-    const salt_key = process.env.MARCENT_KEY;
+    console.log("check", test, transactionId)
+
+    const merchantId = test ? 'MERCHANTUAT' : process.env.MARCENT_ID;
+    // const merchantId = process.env.MARCENT_ID;
+    // const apiUrl = `https://api.phonepe.com/apis/hermes/pg/v1/status/${merchantId}/${transactionId}`;
+    const apiUrl = test ? `https://api-preprod.phonepe.com/apis/merchant-simulator/pg/v1/status/${merchantId}/${transactionId}` : `https://api.phonepe.com/apis/hermes/pg/v1/status/${merchantId}/${transactionId}`;
+    // const salt_key = process.env.MARCENT_KEY;
+    const salt_key = test ? '099eb0cd-02cf-4e2a-8aca-3e6c6aff0399' : process.env.MARCENT_KEY;
     const salt_index = 1;
     const string_to_encode = `/pg/v1/status/${merchantId}/${transactionId}` + salt_key;
     const encoded_string = crypto.createHash('sha256').update(string_to_encode).digest('hex');
@@ -87,16 +83,6 @@ const paymentresponse = async (req, res) => {
     console.log(final_xheader);
 
     try {
-
-
-        // const response = await axios.get(apiUrl, {
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //         'X-VERIFY': final_xheader,
-        //         'X-MERCHANT-ID': 'MERCHANTUAT'
-
-        //     }
-        // });
 
         const response = await fetch(apiUrl, {
             method: 'GET',
@@ -107,10 +93,14 @@ const paymentresponse = async (req, res) => {
             }
         });
 
-        //   const responseData = await response.json();
 
-        console.log(response.data);
-        res.send(response.data);
+        // console.log(response.data);
+        // res.send(response.data);
+
+        const responseData = await response.json(); // Get the JSON data from the response
+
+        console.log(responseData); // Log the JSON data
+        res.send(responseData);
     } catch (error) {
         console.error('An error occurred:', error.message);
         res.status(500).send('Payment failed on response');
