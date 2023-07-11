@@ -27,7 +27,7 @@ const paymentmanage = async (req, res) => {
     const final_xheader = encoded_string + '###' + salt_index;
     try {
 
-        
+
         // const response = await axios.post('https://api.phonepe.com/apis/hermes/pg/v1/pay', { // Replace with actual production API URL
         //     request: encoded_data
         // }, {
@@ -43,20 +43,29 @@ const paymentmanage = async (req, res) => {
             method: 'POST',
             body: JSON.stringify({ request: encoded_data }),
             headers: {
-              'X-VERIFY': final_xheader,
-              'Content-Type': 'application/json'
+                'X-VERIFY': final_xheader,
+                'Content-Type': 'application/json'
             }
-          });
-      
-          const responseData = await response.json();
-          const payment_url = responseData.data.instrumentResponse.redirectInfo.url;
+        });
+
+        const responseData = await response.json();
+        const payment_url = responseData.data.instrumentResponse.redirectInfo.url;
 
         console.log(payment_url)
 
-        res.redirect(payment_url);
+        // res.redirect(payment_url);
+
+        res.json({
+            success: true,
+            redirect_url: payment_url
+        })
+
     } catch (error) {
         console.error('An error occurred:', error);
-        res.status(500).send('Payment failed');
+        res.status(500).json({
+            message:'Payment failed',
+            success:false
+        });
     }
 
 
@@ -92,12 +101,12 @@ const paymentresponse = async (req, res) => {
         const response = await fetch(apiUrl, {
             method: 'GET',
             headers: {
-              'Content-Type': 'application/json',
-              'X-VERIFY': final_xheader,
-              'X-MERCHANT-ID': 'MERCHANTUAT'
+                'Content-Type': 'application/json',
+                'X-VERIFY': final_xheader,
+                'X-MERCHANT-ID': 'MERCHANTUAT'
             }
-          });
-      
+        });
+
         //   const responseData = await response.json();
 
         console.log(response.data);

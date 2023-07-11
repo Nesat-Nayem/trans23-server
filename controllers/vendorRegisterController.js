@@ -96,7 +96,7 @@ exports.vendorRegister = (req, res, next) => {
   
   exports.getVendor = async(req,res)=>{
     const userId = req.query.userId;
-    const vendordetails = await Vendor.findOne({ userId });
+    const vendordetails = await Vendor.find({ userId });
     if (vendordetails) {
       // id found, data send
       res.status(200).json({
