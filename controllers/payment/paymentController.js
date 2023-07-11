@@ -10,9 +10,9 @@ const paymentmanage = async (req, res) => {
         merchantTransactionId: req.body.transection_id, // Replace with your own function to generate unique IDs
         merchantUserId: 'jlkjkoeirue',
         amount: req.body.amount * 100,
-        redirectUrl: `http://transserver.eba-ybz4shyq.ap-south-1.elasticbeanstalk.com/api/payment/response?status=success&transactionId=${req.body.transection_id}`,
+        redirectUrl: `http://transserver-env.eba-ieqecsf3.ap-south-1.elasticbeanstalk.com//api/payment/response?status=success&transactionId=${req.body.transection_id}`,
         redirectMode: 'POST',
-        callbackUrl: 'http://transserver.eba-ybz4shyq.ap-south-1.elasticbeanstalk.com/api/payment/response',
+        callbackUrl: 'http://transserver-env.eba-ieqecsf3.ap-south-1.elasticbeanstalk.com//api/payment/response',
         mobileNumber: '9021557095',
         paymentInstrument: {
             type: 'PAY_PAGE'
