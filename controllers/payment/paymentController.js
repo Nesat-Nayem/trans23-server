@@ -52,6 +52,9 @@ const paymentmanage = async (req, res) => {
             redirect_url: payment_url
         })
 
+            // Refresh the page after the redirect
+    // res.setHeader('Refresh', '0');
+
     } catch (error) {
         console.error('An error occurred:', error);
         res.status(500).json({
@@ -66,7 +69,18 @@ const paymentmanage = async (req, res) => {
 
 
 const paymentresponse = async (req, res) => {
+    console.log("payment",req.query);
+
+    res.redirect(`http://transserver-env.eba-ieqecsf3.ap-south-1.elasticbeanstalk.com/api/payment/check-status?test=${req.query.test}&transactionId=${req.query.transactionId}`)
+}
+
+
+const checkStatus = async (req, res) => {
+    console.log("checkStatus",req.query);
+
+
     const test = req.query.test;
+
     const transactionId = req.query.transactionId;
     console.log("check", test, transactionId)
 
@@ -110,5 +124,6 @@ const paymentresponse = async (req, res) => {
 
 module.exports = {
     paymentmanage,
-    paymentresponse
+    paymentresponse,
+    checkStatus
 }
