@@ -113,7 +113,7 @@ const checkStatus = async (req, res) => {
 
         const responseData = await response.json(); // Get the JSON data from the response
 
-        console.log(responseData); // Log the JSON data
+        // console.log(responseData); // Log the JSON data
         res.send(responseData);
     } catch (error) {
         console.error('An error occurred:', error.message);

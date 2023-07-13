@@ -13,24 +13,24 @@ const { handleErrors } = require("../middlewares/errorHandler");
 //         if (error instanceof mongoose.Error.ValidationError) {
 //           // handle validation error
 //           res.status(400).json({ 
-            
+
 //             // error: error.message
 
 //             success: false,
 //             message: error.message,
 //             data: {}
-          
+
 //           });
 //         } else {
 //           // handle other errors
 //           res.status(500).json({ 
-            
+
 //             // error: error.message
 
 //             success: false,
 //             message: error.message,
 //             data: {}
-          
+
 //           });
 //         }
 //       } else {
@@ -48,25 +48,25 @@ exports.vendorRegister = (req, res, next) => {
     if (error) {
       if (error instanceof mongoose.Error.ValidationError) {
         // handle validation error
-        res.status(400).json({ 
-          
+        res.status(400).json({
+
           // error: error.message
 
           success: false,
           message: error.message,
           data: {}
-        
+
         });
       } else {
         // handle other errors
-        res.status(500).json({ 
-          
+        res.status(500).json({
+
           // error: error.message
 
           success: false,
           message: error.message,
           data: {}
-        
+
         });
       }
     } else {
@@ -80,69 +80,155 @@ exports.vendorRegister = (req, res, next) => {
 };
 
 
-  exports.vendorVerifyOTP = (req, res, next) => {
-    vendorService.verifyOTP(req.body, (error, results) => {
-      if (error) {
-        return next(error);
-      }
-      return res.status(200).send({
-        success:true,
-        message: "Register Success",
-        token: results.token,
-        user:results.user
-      });
+exports.vendorVerifyOTP = (req, res, next) => {
+  vendorService.verifyOTP(req.body, (error, results) => {
+    if (error) {
+      return next(error);
+    }
+    return res.status(200).send({
+      success: true,
+      message: "Register Success",
+      token: results.token,
+      user: results.user
     });
-  };
+  });
+};
+
+// exports.getVendor = async (req, res) => {
+//   const _id = req.query.userId;
+//   const vendordetails = await Vendor.find({ _id });
+//   if (vendordetails) {
+//     // id found, data send
+//     res.status(200).json({
+//       success: true,
+//       message: "data get success",
+//       data: vendordetails,
+//     });
+//   } else {
+//     // id not found, error message send
+//     res.status(404).json({
+//       success: false,
+//       message: "Not Found",
+
+//     });
+//   }
+
+// }
+
+
+exports.getVendor = async (req, res) => {
+  try {
+    const _id = req.query.userId;
+    let vendordetails;
   
-  exports.getVendor = async(req,res)=>{
-    const userId = req.query.userId;
-    const vendordetails = await Vendor.find({ userId });
-    if (vendordetails) {
-      // id found, data send
+    if (_id) {
+      vendordetails = await Vendor.findOne({ _id }); // Use findOne instead of find
+    } else {
+      vendordetails = await Vendor.find();
+    }
+  
+    if (vendordetails) { // Check if vendordetails is not null or undefined
       res.status(200).json({
         success: true,
-        message: "data get success",
+        message: "Data retrieved successfully",
         data: vendordetails,
       });
     } else {
-      // id not found, error message send
       res.status(404).json({
         success: false,
         message: "Not Found",
-    
       });
     }
-
+  
+  } catch (error) {
+    res.status(500).json({
+      message: error.message
+    });
   }
+}
+
+
+exports.patchVendor = async (req, res) => {
+  const _id = req.query.userId;
+  const update = req.body;
+
+  try {
+    const updatedVendor = await Vendor.findOneAndUpdate({ _id }, update, { new: true });
+
+    if (updatedVendor) {
+      res.status(200).json({
+        success: true,
+        message: "Vendor updated successfully",
+        data: updatedVendor,
+      });
+    } else {
+      res.status(404).json({
+        success: false,
+        message: "Vendor not found",
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "An error occurred while updating the vendor",
+    });
+  }
+}
+
+exports.deleteVendor = async (req, res) => {
+  const _id = req.query.userId;
+
+  try {
+    const deletedVendor = await Vendor.findOneAndDelete({ _id });
+
+    if (deletedVendor) {
+      res.status(200).json({
+        success: true,
+        message: "Vendor deleted successfully",
+      });
+    } else {
+      res.status(404).json({
+        success: false,
+        message: "Vendor not found",
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "An error occurred while deleting the vendor",
+    });
+  }
+}
+
 
 
 exports.vendorLogin = async (req, res) => {
-    const { email, password } = req.body;
-  
-    try {
-      // Use try/catch to handle errors from login method
-      const user = await Vendor.login(email, password);
+  const { email, password } = req.body;
 
-      const userinfo = await Vendor.findOne({ email: email }).select("-password");
+  try {
+    // Use try/catch to handle errors from login method
+    const user = await Vendor.login(email, password);
 
-      // const userinfo = await Vendor.findOne({ email: email }).select("-password -_id");
+    const userinfo = await Vendor.findOne({ email: email }).select("-password");
 
-      // console.log("email to user info", userinfo)
-      // Sign token and send it back to client
-      const token = await jwt.sign({ email: user.email }, process.env.JWT_SECRET);
-          res.status(200).json({
-        success:true,
-        message:'LogIn Success',
-         token: token,
-         user: userinfo
-        });
-    } catch (err) {
-      // Handle errors from login method or jwt sign
-      // const errors = handleErrors(err);
-      res.status(400).json({
-        success: false,
-        message: err.message,
-        data: {}
-      });
-    }
-  };
+    // const userinfo = await Vendor.findOne({ email: email }).select("-password -_id");
+
+    // console.log("email to user info", userinfo)
+    // Sign token and send it back to client
+    const token = await jwt.sign({ email: user.email }, process.env.JWT_SECRET);
+    res.status(200).json({
+      success: true,
+      message: 'LogIn Success',
+      token: token,
+      user: userinfo
+    });
+  } catch (err) {
+    // Handle errors from login method or jwt sign
+    // const errors = handleErrors(err);
+    res.status(400).json({
+      success: false,
+      message: err.message,
+      data: {}
+    });
+  }
+};
