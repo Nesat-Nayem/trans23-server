@@ -20,7 +20,9 @@ const transactionSchema = new mongoose.Schema({
   id: String,
   name: String,
   amount: Number,
-  image: String,
+  code: String,
+  state:String,
+  payment_gateway:String,
   payment_gateway_id: String,
   date: String,
 });
@@ -36,7 +38,7 @@ const orderSchema = new mongoose.Schema(
     type: String,
     status: String,
     message: String,
-    vendor_id:String,
+    vendor_id: String,
 
     movers_packers: {
       with_in_city: Boolean,

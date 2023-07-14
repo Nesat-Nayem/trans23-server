@@ -10,10 +10,10 @@ const paymentmanage = async (req, res) => {
         merchantTransactionId: req.body.transection_id, // Replace with your own function to generate unique IDs
         merchantUserId: 'jlkjkoeirue',
         amount: req.body.amount * 100,
-        redirectUrl: test ? `http://transserver-env.eba-ieqecsf3.ap-south-1.elasticbeanstalk.com/api/payment/response?test=${req.body.test}&transactionId=${req.body.transection_id}` : `http://transserver-env.eba-ieqecsf3.ap-south-1.elasticbeanstalk.com/api/payment/response?test=${req.body.test}&transactionId=${req.body.transection_id}`,
+        redirectUrl: test ? `https://server.trans23.com/api/payment/response?test=${req.body.test}&transactionId=${req.body.transection_id}` : `https://server.trans23.com/api/payment/response?test=${req.body.test}&transactionId=${req.body.transection_id}`,
         redirectMode: 'GET',
-        callbackUrl: test ? 'http://transserver-env.eba-ieqecsf3.ap-south-1.elasticbeanstalk.com/payment/response'
-            : 'http://transserver-env.eba-ieqecsf3.ap-south-1.elasticbeanstalk.com/api/payment/response',
+        callbackUrl: test ? 'https://server.trans23.com/payment/response'
+            : 'https://server.trans23.com/api/payment/response',
         mobileNumber: '9021557095',
         paymentInstrument: {
             type: 'PAY_PAGE'
@@ -71,7 +71,7 @@ const paymentmanage = async (req, res) => {
 const paymentresponse = async (req, res) => {
     console.log("payment",req.query);
 
-    res.redirect(`http://transserver-env.eba-ieqecsf3.ap-south-1.elasticbeanstalk.com/api/payment/check-status?test=${req.query.test}&transactionId=${req.query.transactionId}`)
+    res.redirect(`https://server.trans23.com/api/payment/check-status?test=${req.query.test}&transactionId=${req.query.transactionId}`)
 }
 
 
