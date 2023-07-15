@@ -61,7 +61,7 @@ const {
 } = require("../controllers/franciesRagistrationControllers");
 const authController = require("../controllers/adminControllers");
 const { checkUser, checkAdmin } = require("../middlewares/newAuth");
-const { vehicleImageUploader } = require("../controllers/vehicleImageController");
+// const { vehicleImageUploader } = require("../controllers/vehicleImageController");
 
 const notificationController = require("../controllers/notificationController");
 const { vendorRegister, vendorVerifyOTP, vendorLogin, getVendor, deleteVendor, patchVendor } = require("../controllers/vendorRegisterController");
@@ -71,7 +71,7 @@ const { VendorDetailsHandalar } = require("../controllers/vendorDetailsControlle
 const { vendorCompanyDetailsHandalar } = require("../controllers/vendor/companyDetailsControllers");
 const { vendorEmployHandalar } = require("../controllers/vendor/employController");
 const { vendorVehicleHandalar } = require("../controllers/vendor/vendorVehicleControllers");
-const S3ImageUploader = require("../controllers/awsImageUploader");
+const {singleImageUploadS3, miltipleImageUploadS3} = require("../controllers/awsImageUploader");
 const vendorDashboardHandalar = require("../controllers/vendor/vendorDashboardController");
 const { vendorSelectedServiceHandalar } = require("../controllers/vendor/vendorSelectedServiceControllers");
 const { paymentmanage, paymentresponse, checkStatus } = require("../controllers/payment/paymentController");
@@ -81,8 +81,8 @@ const { paymentmanage, paymentresponse, checkStatus } = require("../controllers/
 const router = express.Router();
 
 
-const storage = multer.memoryStorage()
-const upload = multer({ storage: storage })
+// const storage = multer.memoryStorage()
+// const upload = multer({ storage: storage })
 
 
 // Users
@@ -206,17 +206,33 @@ router.delete("/bike-pricing/:id", bikePriceHandler)
 
 
 
+const storage = multer.memoryStorage()
+const upload = multer({ storage: storage })
 
-router.post("/s3imageUpload", upload.single('image'), S3ImageUploader)
+
+// router.post("/s3imageUpload", upload.fields([{ name: "image1", maxCount: 1 }, { name: "image2", maxCount: 1 }]), singleImageUploadS3)
+
+router.post("/s3imageUpload", upload.single('image'), singleImageUploadS3)
+
+
 // vehicle image uploader 
 
 router.post(
   "/vehicle_image_uploader",
-  checkUser,
-  uploader.fields([{ name: 'nid', maxCount: 1 }, { name: 'insurance', maxCount: 1 }, { name: 'RC', maxCount: 1 }, { name: 'front', maxCount: 1 }, { name: 'rear', maxCount: 1 }, { name: 'left', maxCount: 1 }, { name: 'right', maxCount: 1 }, { name: 'extra', maxCount: 5 }]),
-  vehicleImageUploader
+
+  upload.fields([{ name: 'nid', maxCount: 1 }, { name: 'insurance', maxCount: 1 }, { name: 'RC', maxCount: 1 }, { name: 'front', maxCount: 1 }, { name: 'rear', maxCount: 1 }, { name: 'left', maxCount: 1 }, { name: 'right', maxCount: 1 }, { name: 'extra', maxCount: 5 }]),
+  miltipleImageUploadS3
 
 )
+
+
+// router.post(
+//   "/vehicle_image_uploader",
+//   // checkUser,
+//   uploader.fields([{ name: 'nid', maxCount: 1 }, { name: 'insurance', maxCount: 1 }, { name: 'RC', maxCount: 1 }, { name: 'front', maxCount: 1 }, { name: 'rear', maxCount: 1 }, { name: 'left', maxCount: 1 }, { name: 'right', maxCount: 1 }, { name: 'extra', maxCount: 5 }]),
+//   vehicleImageUploader
+
+// )
 
 // appliances
 
