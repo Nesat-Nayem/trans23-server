@@ -77,6 +77,7 @@ const orderSchema = new mongoose.Schema(
     payment_details: {
       type: {
         type: String,
+       
       },
       total_amount: Number,
       outstanding_amount: Number,
