@@ -267,6 +267,7 @@ const getOrders = async (req, res) => {
     const service = req.query.service;
     const type = req.query.type;
     const vendor_id = req.query.vendor_id;
+    const status = req.query.status
 
     if (service) {
       query.service = service;
@@ -277,6 +278,9 @@ const getOrders = async (req, res) => {
     }
     if (vendor_id) {
       query.vendor_id = vendor_id;
+    }
+    if(status){
+      query.status = status
     }
 
     const services = await Orders.find(query);
