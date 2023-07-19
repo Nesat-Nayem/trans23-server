@@ -72,4 +72,6 @@ const VendorDetailsHandalar = async (req, res) => {
 
 
 
+
+
 module.exports = { VendorDetailsHandalar }

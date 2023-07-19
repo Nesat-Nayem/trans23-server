@@ -64,6 +64,10 @@ var vendorDetailsSchema = new mongoose.Schema({
       type : String,
       required:true,
   },
+  service:{
+    type:[String],
+    default:[]
+  },
   verification_status:{
     type:String,
     default:"in_verification"
