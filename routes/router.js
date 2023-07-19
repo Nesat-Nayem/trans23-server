@@ -75,6 +75,7 @@ const {singleImageUploadS3, miltipleImageUploadS3} = require("../controllers/aws
 const vendorDashboardHandalar = require("../controllers/vendor/vendorDashboardController");
 const { vendorSelectedServiceHandalar } = require("../controllers/vendor/vendorSelectedServiceControllers");
 const { paymentmanage, paymentresponse, checkStatus } = require("../controllers/payment/paymentController");
+const vendorNotificationHandalar = require("../controllers/vendor/notificationVendorController");
 
 
 
@@ -309,8 +310,11 @@ router.post("/payment/response",paymentresponse )
 router.get("/payment/check-status",checkStatus )
 
 
+// vendor notification
 
-
+router.post("/vendor-notification", vendorNotificationHandalar)
+router.get("/vendor-notification", vendorNotificationHandalar)
+router.delete("/vendor-notification/:id", vendorNotificationHandalar)
 
 
 
