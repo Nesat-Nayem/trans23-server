@@ -21,8 +21,8 @@ const transactionSchema = new mongoose.Schema({
   name: String,
   amount: Number,
   code: String,
-  state:String,
-  payment_gateway:String,
+  state: String,
+  payment_gateway: String,
   payment_gateway_id: String,
   date: String,
 });
@@ -77,9 +77,9 @@ const orderSchema = new mongoose.Schema(
     payment_details: {
       type: {
         type: String,
-       
       },
       total_amount: Number,
+      vendor_price: Number,
       outstanding_amount: Number,
       next_subsription_title: String,
       next_subsription_amount: Number,
@@ -97,6 +97,42 @@ const orderSchema = new mongoose.Schema(
 orderSchema.set("toObject", { getters: true, virtuals: true });
 orderSchema.set("toJSON", { getters: true, virtuals: true });
 orderSchema.index({ location: "2dsphere" });
+
+// orderSchema.pre("save", function (next) {
+//   let totalAmount = this.payment_details.total_amount;
+//   if(totalAmount && this.isModified('payment_details')){
+//       this.payment_details.vendor_price = totalAmount * 0.9;  // calculate 90% of the total amount
+//   }
+//   next();
+// });
+
+orderSchema.pre("save", function (next) {
+  let totalAmount = this.payment_details.total_amount;
+  if(totalAmount && this.isModified('payment_details')){
+      switch(this.service){
+          case 'movers_packers':
+             this.payment_details.vendor_price = totalAmount * 0.9;  // 90% of total amount
+             break;
+          case 'courier':
+             this.payment_details.vendor_price = totalAmount * 0.8;  // 80% of total amount
+             break;
+          case 'storage':
+             this.payment_details.vendor_price = totalAmount * 0.92;  // 8% less = 92% of total amount
+             break;
+          case 'vehicle_transport':
+             this.payment_details.vendor_price = totalAmount * 0.85;  // 15% less = 85% of total amount
+             break;
+          default: 
+             // Default case if needed
+             break;
+      }
+  }
+  next();
+});
+
+
+
+
 orderSchema.pre("save", function (next) {
   if (!this.isModified("password")) {
     return next();
