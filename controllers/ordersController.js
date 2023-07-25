@@ -185,7 +185,7 @@ const postOrders = async (req, res) => {
     pincode = vehicle_transport.from.pincode;
   }
 
-  console.log(pincode);
+  // console.log(pincode);
 
   try {
     const { lat, lng } = await getCoordinatesFromPincode(pincode);
@@ -204,7 +204,7 @@ const postOrders = async (req, res) => {
       .then((locations) => locations.sort((a, b) => a.distance - b.distance))
       .then((sortedLocations) => sortedLocations.slice(0, 5));
 
-    console.log("vendor nearest", nearestLocations)
+    // console.log("vendor nearest", nearestLocations)
 
 
     const order = new Orders({

@@ -6,12 +6,12 @@ const AdminUser = require("../models/adminModel");
 const checkUser = (req, res, next) => {
   const { authorization, userid, secret } = req.headers;
   // const {userId} = req.headers;
-  console.log("header id",userid)
+  // console.log("header id",userid)
   try {
     const token = authorization.split(" ")[1];
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     // const decoded = jwt.verify(token, secret);
-    console.log("decoded id",decoded.userId)
+    // console.log("decoded id",decoded.userId)
 
     if (decoded.userId !== userid) {
       return res.status(403).json({ message: "You are not authorized to access this resource" });

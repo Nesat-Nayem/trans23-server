@@ -76,6 +76,7 @@ const vendorDashboardHandalar = require("../controllers/vendor/vendorDashboardCo
 const { vendorSelectedServiceHandalar } = require("../controllers/vendor/vendorSelectedServiceControllers");
 const { paymentmanage, paymentresponse, checkStatus } = require("../controllers/payment/paymentController");
 const vendorNotificationHandalar = require("../controllers/vendor/notificationVendorController");
+const vendorPaymentHandalar = require("../controllers/vendor/vendorPaymentController");
 
 
 
@@ -316,6 +317,13 @@ router.post("/vendor-notification", vendorNotificationHandalar)
 router.get("/vendor-notification", vendorNotificationHandalar)
 router.delete("/vendor-notification/:id", vendorNotificationHandalar)
 
+
+// vendor payment 
+
+router.post("/vendor/create-payment", vendorPaymentHandalar)
+router.get("/vendor/get-payment", vendorPaymentHandalar)
+router.patch("/vendor/update-payment", vendorPaymentHandalar)
+router.delete("/vendor/remove-payment", vendorPaymentHandalar)
 
 
 // otp mail 

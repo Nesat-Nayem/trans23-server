@@ -1,29 +1,27 @@
-const VendorEmployee = require("../../models/vendor/employModel");
+const VendorPayment = require("../../models/vendor/vendorPaymentModel");
 
-// appliance create and get
-
-const vendorEmployHandalar = async (req, res) => {
+const vendorPaymentHandalar = async (req, res) => {
   try {
     if (req.method === "POST") {
-      const vendoremp = new VendorEmployee(req.body);
-      const result = await vendoremp.save();
+      const vendorpayment = new VendorPayment(req.body);
+      const result = await vendorpayment.save();
       res.status(200).json({
         success: true,
-        message: "employee added",
+        message: "insert success",
       });
     } else if (req.method === "GET") {
       const userId = req.query.userId || "";
       const query = userId ? { userId } : {};
-      const vendoremp = await VendorEmployee.find(query);
+      const vendorpayment = await VendorPayment.find(query);
       res.status(200).json({
         success: true,
-        message: "employee data get success",
-        data: vendoremp,
+        message: "found success",
+        data: vendorpayment,
       });
     } else if (req.method === "PATCH") {
       const query = req.query.objectId || "";
 
-      const vendoremp = await VendorEmployee.findByIdAndUpdate(
+      const vendorpayment = await VendorPayment.findByIdAndUpdate(
         query,
         req.body,
         { new: true }
@@ -31,15 +29,15 @@ const vendorEmployHandalar = async (req, res) => {
       res.status(200).json({
         success: true,
         message: "updated success",
-        // data: vendoremp,
+        // data: vendorpayment,
       });
     } else if (req.method === "DELETE") {
       const objectId = req.query.objectId || "";
-      const vendoremp = await VendorEmployee.findByIdAndDelete(objectId);
+      const vendorpayment = await VendorPayment.findByIdAndDelete(objectId);
       res.status(200).json({
         success: true,
         message: " delete success",
-        // data: vendoremp,
+        // data: vendorpayment,
       });
     } else {
       res.status(405).json({
@@ -51,14 +49,11 @@ const vendorEmployHandalar = async (req, res) => {
       });
     }
   } catch (error) {
-    res.status(500).json({
-      // error: error.message
-
+    res.json({
       success: false,
       message: error.message,
-      data: {},
     });
   }
 };
 
-module.exports = { vendorEmployHandalar };
+module.exports = vendorPaymentHandalar;

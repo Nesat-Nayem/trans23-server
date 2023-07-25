@@ -4,7 +4,6 @@ const port = process.env.PORT || 7070;
 const dotenv = require("dotenv");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
-
 const http = require("http").createServer(app);
 const socketIO = require("socket.io")(http, {
   cors: {
@@ -70,6 +69,10 @@ const { errorHandler } = require("./middlewares/errorHandler");
 // db connernt
 
 connectDB();
+
+require("./schedulers/weeklyVendorSamary")
+
+
 
 app.use("/api", allRouters);
 
