@@ -10,8 +10,8 @@ const vendorPaymentHandalar = async (req, res) => {
         message: "insert success",
       });
     } else if (req.method === "GET") {
-      const userId = req.query.userId || "";
-      const query = userId ? { userId } : {};
+      const vendor_id = req.query.vendor_id || "";
+      const query = vendor_id ? { vendor_id } : {};
       const vendorpayment = await VendorPayment.find(query);
       res.status(200).json({
         success: true,

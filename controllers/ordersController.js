@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const fetch = require('node-fetch');
 const { distance } = require("../util/distancefinder");
 const { getCoordinatesFromPincode } = require("../util/geocode");
+const VendorPayment = require("../models/vendor/vendorPaymentModel")
 
 const findFrancies = async (req, res) => {
 
@@ -301,8 +302,12 @@ const getvendorbalance = async (req, res) => {
       query.vendor_id = vendor_id;
     }
 
+
     // Fetch all orders for the vendor
     const orders = await Orders.find(query);
+// console.log("query test", query)
+    const vendorpayment = await VendorPayment.find(query);
+    // console.log('test vendor', vendorpayment)
 
     // console.log(orders)
 
@@ -340,7 +345,9 @@ const getvendorbalance = async (req, res) => {
       transactions: transactions,
       total_earning: totalEarning,
       pending_earning: pendingEarning,
-      monthly_earning: monthlyEarning
+      monthly_earning: monthlyEarning,
+      // settlement:vendorpayment?.data
+      settlement:vendorpayment
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
