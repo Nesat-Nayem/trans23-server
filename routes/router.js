@@ -13,6 +13,7 @@ const {
   postOrders,
   cleanOrders,
   getvendorbalance,
+  getSingleOrder,
 } = require("../controllers/ordersController");
 
 const {
@@ -140,6 +141,7 @@ router.patch(
   statusAndOutstandingAmt
 );
 router.patch("/order/:id", updateOrder);
+router.get("/single-order/:_id", getSingleOrder)
 
 router.get("/report-orders", checkAdmin, reportOrders);
 

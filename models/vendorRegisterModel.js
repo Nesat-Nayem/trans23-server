@@ -32,7 +32,7 @@ const vendorSchema = new Schema({
         required: true
     },
 
-    pincode : {
+    device_token : {
       type : String,
       required:true,
   },

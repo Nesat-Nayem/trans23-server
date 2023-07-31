@@ -291,6 +291,32 @@ const getOrders = async (req, res) => {
   }
 };
 
+const getSingleOrder = async(req,res)=>{
+  try {
+    const id = req.params._id
+    const order = await Orders.findOne({_id:id});
+    if(!order){
+    return res.status(400).json({
+        success:false,
+        message:"order not folund"
+      })
+    }
+
+    res.status(200).json({
+      success:true,
+      data:order
+    })
+
+
+    
+  } catch (error) {
+    res.status(500).json({
+      success:false,
+      message:error.message
+    })
+  }
+}
+
 
 const getvendorbalance = async (req, res) => {
   try {
@@ -404,5 +430,6 @@ module.exports = {
   statusAndOutstandingAmt,
   updateOrder,
   getvendorbalance,
-  reportOrders
+  reportOrders,
+  getSingleOrder
 };
