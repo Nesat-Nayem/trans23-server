@@ -192,20 +192,20 @@ const postOrders = async (req, res) => {
     const { lat, lng } = await getCoordinatesFromPincode(pincode);
     // const franciesAccount = await mongoose.model('FranciesAccount').find({}, 'id username long lat');
 
-    const vendorDetails = await mongoose.model('VendorDetails').find({}, 'long lat name userId')
+    const vendorDetails = await mongoose.model('VendorDetails').find({}, 'long lat name userId device_token')
 
 
 
     const nearestLocations = await Promise.all(vendorDetails
       .map(async (location) => {
-        const { lat: locLat, long: locLong, userId, name } = location;
+        const { lat: locLat, long: locLong, userId, name, device_token } = location;
         const dist = await distance(lat, lng, locLat, locLong);
-        return { userId, name, lat: locLat, long: locLong, distance: dist };
+        return { userId, name,device_token, lat: locLat, long: locLong, distance: dist };
       }))
       .then((locations) => locations.sort((a, b) => a.distance - b.distance))
       .then((sortedLocations) => sortedLocations.slice(0, 5));
 
-    // console.log("vendor nearest", nearestLocations)
+    console.log("vendor nearest", nearestLocations)
 
 
     const order = new Orders({

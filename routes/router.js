@@ -40,8 +40,8 @@ const {
   addonsHandler
 } = require("../controllers/addOnsControllers");
 
-const {  courierPriceHandler  } = require("../controllers/courierPriceControllers")
-const {carPriceHandler} = require("../controllers/carPriceControllers")
+const { courierPriceHandler } = require("../controllers/courierPriceControllers")
+const { carPriceHandler } = require("../controllers/carPriceControllers")
 const { bikePriceHandler } = require("../controllers/bikePriceControllers")
 
 const {
@@ -66,13 +66,13 @@ const { checkUser, checkAdmin } = require("../middlewares/newAuth");
 
 const notificationController = require("../controllers/notificationController");
 const { vendorRegister, vendorVerifyOTP, vendorLogin, getVendor, deleteVendor, patchVendor } = require("../controllers/vendorRegisterController");
-const {  vendorServiceHandalar } = require("../controllers/vendorServiceController");
-const {  textmail } = require("../controllers/mailControllers");
+const { vendorServiceHandalar } = require("../controllers/vendorServiceController");
+const { textmail } = require("../controllers/mailControllers");
 const { VendorDetailsHandalar } = require("../controllers/vendorDetailsController");
 const { vendorCompanyDetailsHandalar } = require("../controllers/vendor/companyDetailsControllers");
 const { vendorEmployHandalar } = require("../controllers/vendor/employController");
 const { vendorVehicleHandalar } = require("../controllers/vendor/vendorVehicleControllers");
-const {singleImageUploadS3, miltipleImageUploadS3} = require("../controllers/awsImageUploader");
+const { singleImageUploadS3, miltipleImageUploadS3 } = require("../controllers/awsImageUploader");
 const vendorDashboardHandalar = require("../controllers/vendor/vendorDashboardController");
 const { vendorSelectedServiceHandalar } = require("../controllers/vendor/vendorSelectedServiceControllers");
 const { paymentmanage, paymentresponse, checkStatus } = require("../controllers/payment/paymentController");
@@ -250,7 +250,7 @@ router.delete("/applience/:id", checkAdmin, modifyApplience);
 router.post("/franciesSingUp", franciesSingUp);
 
 router.post("/franciesSingIn", franciesSingIn);
- 
+
 router.get("/allfrancies", getallFrancies);
 
 router.patch("/updateaccess/:id", updateFranciesAccess);
@@ -307,10 +307,10 @@ router.post("/vendor/selected-service", vendorSelectedServiceHandalar)
 router.get("/vendor/earning", getvendorbalance)
 
 
-router.post("/payment/pay",paymentmanage )
-router.post("/payment/response",paymentresponse )
+router.post("/payment/pay", paymentmanage)
+router.post("/payment/response", paymentresponse)
 
-router.get("/payment/check-status",checkStatus )
+router.get("/payment/check-status", checkStatus)
 
 
 // vendor notification

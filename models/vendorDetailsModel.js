@@ -65,6 +65,10 @@ var vendorDetailsSchema = new mongoose.Schema({
       type : String,
       required:true,
   },
+  device_token : {
+      type : String,
+      required:true,
+  },
   service:{
     type:[String],
     default:[]
