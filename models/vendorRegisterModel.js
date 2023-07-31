@@ -32,10 +32,6 @@ const vendorSchema = new Schema({
         required: true
     },
 
-    device_token : {
-      type : String,
-      required:true,
-  },
 
   franciesId: {
     type: String
@@ -71,17 +67,19 @@ vendorSchema.pre('save', async function(next) {
   const salt = await bcrypt.genSalt();
   this.password = await bcrypt.hash(this.password, salt);
 
-  const { pincode } = this;
-  try { 
-    const nearestFrancies = await nearestfranciesforvendor(pincode);
-    if (nearestFrancies && nearestFrancies.length > 0) {  
-      // console.log("check here id under",nearestFrancies )
-      this.franciesId = nearestFrancies[0]._id; // Use _id instead of id
-    }
-  } catch (error) {
-    console.error(error);
-    // Handle the error appropriately
-  }
+
+
+  // const { pincode } = this;
+  // try { 
+  //   const nearestFrancies = await nearestfranciesforvendor(pincode);
+  //   if (nearestFrancies && nearestFrancies.length > 0) {  
+  //     // console.log("check here id under",nearestFrancies )
+  //     this.franciesId = nearestFrancies[0]._id; // Use _id instead of id
+  //   }
+  // } catch (error) {
+  //   console.error(error);
+  //   // Handle the error appropriately
+  // }
 
   next();
 });

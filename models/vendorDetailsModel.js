@@ -1,5 +1,6 @@
 
 const mongoose = require('mongoose');
+const { nearestfranciesforvendor } = require('../controllers/ordersController');
 
 var vendorDetailsSchema = new mongoose.Schema({
 
@@ -79,6 +80,9 @@ var vendorDetailsSchema = new mongoose.Schema({
   lat: {
     type: Number
   },
+  franciesId: {
+    type: String
+  },
 
 }, { timestamps: true });
 
@@ -104,6 +108,23 @@ vendorDetailsSchema.pre('save', async function(next) {
         this.generatedId = randomNumber;
     }
     // call the next middleware
+
+// set francies 
+
+  const { pincode } = this;
+  try { 
+    const nearestFrancies = await nearestfranciesforvendor(pincode);
+    if (nearestFrancies && nearestFrancies.length > 0) {  
+      // console.log("check here id under",nearestFrancies )
+      this.franciesId = nearestFrancies[0]._id; // Use _id instead of id
+    }
+  } catch (error) {
+    console.error(error);
+    // Handle the error appropriately
+  }
+
+
+
     next();
 });
 

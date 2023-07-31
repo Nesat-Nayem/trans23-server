@@ -357,20 +357,20 @@ async function createNewOTP(params, callback) {
                 const mailHash = crypto.createHmac("sha256", key).update(mdata2).digest("hex");
                 const fullMailHash = `${mailHash}.${expires}`
 
-                textmail({
-                    body: {
-                        userMail: params.email,
-                        name: params.name,
-                        text: `Hello ${params.name}, You have requested to log in to your Trans23 account. Use OTP ${mailOtp} to verify your identity and access your account. This OTP will expire in 5 minutes. Do not share your OTP with anyone to keep your account safe. Regards,Trans23 Transportation`,
+                // textmail({
+                //     body: {
+                //         userMail: params.email,
+                //         name: params.name,
+                //         text: `Hello ${params.name}, You have requested to log in to your Trans23 account. Use OTP ${mailOtp} to verify your identity and access your account. This OTP will expire in 5 minutes. Do not share your OTP with anyone to keep your account safe. Regards,Trans23 Transportation`,
 
-                    }
-                }, function (err, data) {
-                    if (err) {
-                        console.log("error sending mail", err);
-                    } else {
-                        console.log("mail sent successfully");
-                    }
-                });
+                //     }
+                // }, function (err, data) {
+                //     if (err) {
+                //         console.log("error sending mail", err);
+                //     } else {
+                //         console.log("mail sent successfully");
+                //     }
+                // });
 
                 const towres = { phoneHash: fullPhoneHash, devPhoneOtp: phoneOtp, mailHash: fullMailHash, devMailOtp: mailOtp };
 
