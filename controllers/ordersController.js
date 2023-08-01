@@ -4,7 +4,9 @@ const mongoose = require("mongoose");
 const fetch = require('node-fetch');
 const { distance } = require("../util/distancefinder");
 const { getCoordinatesFromPincode } = require("../util/geocode");
-const VendorPayment = require("../models/vendor/vendorPaymentModel")
+const VendorPayment = require("../models/vendor/vendorPaymentModel");
+// const multiNotificationSend = require("./notificationMultipleController");
+const {multiNotificationSend} = require("./notificationController");
 
 const findFrancies = async (req, res) => {
 
@@ -205,12 +207,36 @@ const postOrders = async (req, res) => {
       .then((locations) => locations.sort((a, b) => a.distance - b.distance))
       .then((sortedLocations) => sortedLocations.slice(0, 5));
 
-    console.log("vendor nearest", nearestLocations)
+      // const device_token = nearestLocations
+
+    // console.log("vendor nearest object check", device_token)
+
+    const deviceTokenArray = nearestLocations.map(device => device.device_token);
+console.log(deviceTokenArray);
+
+// notification send
+
+ // Now call multiNotificationSend function with specific data
+ const mockReq = {
+  body: {
+    tokens: deviceTokenArray,
+    // tokens: ['token1', 'token2', 'token3'],
+    title: 'New Order',
+    body: 'Please Check Details And Accept Soon!',
+  },
+};
+
+// const mockRes = {
+//   send: (message, data) => console.log("chck notification response",message, data),
+// };
+
+const notificationsend = await multiNotificationSend(mockReq);
 
 
     const order = new Orders({
       ...req.body,
-      vendor_id: nearestLocations[0].userId,
+      // vendor_id: nearestLocations[0].userId,
+      vendor_id: null,
       // francies_id: '645b80b977d8de19e8da1cb1',
     });
 
@@ -228,6 +254,39 @@ const postOrders = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+
+const accept_order = async(req,res) =>{
+  const {orderId, vendorId} = req.body;
+
+  try {
+
+    const order = await Orders.findOneAndUpdate(
+      { _id: orderId, vendor_id: { $eq: null } }, // update only if vendor_id is null
+      { $set: { vendor_id: vendorId } }, // set updated vendor_id
+      { new: true } // return updated document
+    );
+
+    if (!order) {
+      return res.status(400).json({
+        success: false,
+        message: 'Already accepted plz check another one',
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: 'Accepted please proced this order form your order details page',
+      order,
+    });
+    
+  } catch (error) {
+    return res.status(500).json({
+      success:false,
+      message:error.message
+    })
+  }
+}
 
 // thard async order 
 
@@ -431,5 +490,6 @@ module.exports = {
   updateOrder,
   getvendorbalance,
   reportOrders,
-  getSingleOrder
+  getSingleOrder,
+  accept_order
 };

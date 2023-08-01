@@ -14,6 +14,7 @@ const {
   cleanOrders,
   getvendorbalance,
   getSingleOrder,
+  accept_order,
 } = require("../controllers/ordersController");
 
 const {
@@ -64,7 +65,7 @@ const authController = require("../controllers/adminControllers");
 const { checkUser, checkAdmin } = require("../middlewares/newAuth");
 // const { vehicleImageUploader } = require("../controllers/vehicleImageController");
 
-const notificationController = require("../controllers/notificationController");
+// const notificationController = require("../controllers/notificationController");
 const { vendorRegister, vendorVerifyOTP, vendorLogin, getVendor, deleteVendor, patchVendor } = require("../controllers/vendorRegisterController");
 const { vendorServiceHandalar } = require("../controllers/vendorServiceController");
 const { textmail } = require("../controllers/mailControllers");
@@ -78,6 +79,7 @@ const { vendorSelectedServiceHandalar } = require("../controllers/vendor/vendorS
 const { paymentmanage, paymentresponse, checkStatus } = require("../controllers/payment/paymentController");
 const vendorNotificationHandalar = require("../controllers/vendor/notificationVendorController");
 const vendorPaymentHandalar = require("../controllers/vendor/vendorPaymentController");
+const { sendPushNotifications, getNotifications } = require("../controllers/notificationController");
 
 
 
@@ -116,11 +118,14 @@ router.patch("/vendor", patchVendor)
 
 // router.post("/notification", notificationController.sendPushNotifications)
 // router.get("/notification/:phone", notificationController.getNotifications)
+router.post("/notification", sendPushNotifications)
+router.get("/notification/:phone", getNotifications)
 
 // order
 // mobile
 router.get("/orders", getOrders);
 router.post("/orders", checkUser, postOrders);
+router.patch("/accept-order", accept_order)
 
 router.delete("/orders/clean", checkAdmin, cleanOrders);
 
