@@ -209,10 +209,10 @@ const postOrders = async (req, res) => {
 
       // const device_token = nearestLocations
 
-    // console.log("vendor nearest object check", device_token)
+    // console.log("vendor nearest object check", nearestLocations)
 
     const deviceTokenArray = nearestLocations.map(device => device.device_token);
-console.log(deviceTokenArray);
+// console.log(deviceTokenArray);
 
 // notification send
 
@@ -263,7 +263,7 @@ const accept_order = async(req,res) =>{
 
     const order = await Orders.findOneAndUpdate(
       { _id: orderId, vendor_id: { $eq: null } }, // update only if vendor_id is null
-      { $set: { vendor_id: vendorId } }, // set updated vendor_id
+      { $set: { vendor_id: vendorId, status:"processing" } }, // set updated vendor_id and status
       { new: true } // return updated document
     );
 
@@ -277,7 +277,7 @@ const accept_order = async(req,res) =>{
     return res.status(200).json({
       success: true,
       message: 'Accepted please proced this order form your order details page',
-      order,
+      // order,
     });
     
   } catch (error) {
@@ -328,6 +328,7 @@ const getOrders = async (req, res) => {
     const type = req.query.type;
     const vendor_id = req.query.vendor_id;
     const status = req.query.status
+    const pincode = req.query.pincode
 
     if (service) {
       query.service = service;
@@ -339,6 +340,10 @@ const getOrders = async (req, res) => {
     if (vendor_id) {
       query.vendor_id = vendor_id;
     }
+    else if (pincode){
+      query["movers_packers.from.pincode"] = pincode
+      query["vendor_id"] = { $eq: null };
+    }
     if(status){
       query.status = status
     }
@@ -349,6 +354,43 @@ const getOrders = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+
+// const getOrders = async (req, res) => {
+//   try {
+//     let query = {};
+//     const service = req.query.service;
+//     const type = req.query.type;
+//     const vendor_id = req.query.vendor_id;
+//     const status = req.query.status;
+//     const pincode = req.query.pincode;
+
+//     if (service) {
+//       query.service = service;
+//     }
+
+//     if (type) {
+//       query.type = type;
+//     }
+//     if (vendor_id) {
+//       query.vendor_id = vendor_id;
+//     }
+//     else if (pincode) {
+//       // filter by pincode and vendor_id null
+//       query["movers_packers.from.pincode"] = pincode;
+//       query["vendor_id"] = { $eq: null };
+//     }
+//     if(status){
+//       query.status = status
+//     }
+
+//     const services = await Orders.find(query);
+//     res.json(services.reverse());
+//   } catch (error) {
+//     res.status(500).json({ error: error.message });
+//   }
+// };
+
 
 const getSingleOrder = async(req,res)=>{
   try {
