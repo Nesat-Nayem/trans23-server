@@ -20,25 +20,6 @@ const courierPriceHandler = async (req, res) => {
       const pinocdedata = await getCoordinatesFromPincode(toPincode)
       const pinocdedatafrom = await getCoordinatesFromPincode(fromPincode)
 
-      // distance finder 
-      // const distance = (lat1, lon1, lat2, lon2, unit = 'K') => {
-      //   if (lat1 == lat2 && lon1 == lon2) {
-      //     return 0;
-      //   } else {
-      //     const radlat1 = Math.PI * lat1 / 180;
-      //     const radlat2 = Math.PI * lat2 / 180;
-      //     const theta = lon1 - lon2;
-      //     const radtheta = Math.PI * theta / 180;
-      //     let dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
-      //     dist = Math.acos(dist);
-      //     dist = dist * 180 / Math.PI;
-      //     dist = dist * 60 * 1.609344; // convert distance to kilometers
-
-      //     return dist;
-      //   }
-      // };
-      // distance finder 
-
       const lat1 = pinocdedatafrom.lat;
       const lon1 = pinocdedatafrom.lng;
       const lat2 = pinocdedata.lat;
@@ -53,8 +34,7 @@ const courierPriceHandler = async (req, res) => {
       const inventory = await CourierPrice.find({});
       res.status(200).json({
         success: true,
-        message: 'all courier pricing get success',
-        // data: inventory,
+        message: 'get success',
         data: {
           "distance_km": calculatedDistance,
           "price_list": inventory
@@ -78,17 +58,17 @@ const courierPriceHandler = async (req, res) => {
         const result = await CourierPrice.deleteMany({});
         return res.status(200).json({
           success: true,
-          message: 'All courier pricing deleted successfully',
+          message: 'deleted successfully',
           // data: result,
         });
       }
       const result = await CourierPrice.findByIdAndDelete(id);
       if (!result) {
-        return res.status(404).json({ error: 'Inventory not found' });
+        return res.status(404).json({ error: 'not found' });
       }
       res.status(200).json({
         success: true,
-        message: 'Inventory deleted successfully',
+        message: 'deleted successfully',
         // data: result,
       });
     }

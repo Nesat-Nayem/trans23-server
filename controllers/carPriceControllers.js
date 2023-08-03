@@ -89,7 +89,7 @@ const carPriceHandler = async (req, res) => {
       }
       res.status(200).json({
         success: true,
-        message: 'car deleted successfully',
+        message: 'car price deleted successfully',
         // data: result,
       });
     }

@@ -5,6 +5,15 @@ const BikePriceSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  info: {
+    type: String,
+    required: true
+  },
+  image: {
+    type: String,
+    required: true
+  },
+  
   min_qty: {
     type: Number,
     required: true
