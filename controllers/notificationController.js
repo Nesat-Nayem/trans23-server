@@ -177,6 +177,7 @@ const getNotifications = async (req, res, next) => {
         const skip = (page - 1) * limit;
         const count = await Notification.countDocuments({ phone: phone });
         const notifications = await Notification.find({ phone: phone })
+                                                .select('-deviceToken')
                                                 .sort('-sentAt')
                                                 .skip(skip)
                                                 .limit(limit); // Filter by phone number, sort by descending order of sentAt, and apply pagination
