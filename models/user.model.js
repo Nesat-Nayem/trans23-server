@@ -69,7 +69,7 @@ userSchema.pre('save', async function(next) {
     this.balance = 0;
   }
   next();
-});
+},{timestamps:true});
 
 
 const User = mongoose.model("User",userSchema)

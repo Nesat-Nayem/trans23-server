@@ -49,6 +49,9 @@ async function createNewOTP(params, callback) {
     var msg = urlencode(
       `Hello User,%n %nUse OTP ${otp} to log in to your trans23 account. Do not share your OTP with anyone to keep your account safe.%n %nRegards,%nTrans23 Transportation`
     );
+    // var msg = urlencode(
+    //   `Trans23: Your Login OTP code is ${otp} ${hash}`
+    // );
 
     var number = `+91${params.phone}`;
     var apikey = "NmI3NTRkNTU3ODM3NWE2ZjRiN2E0YjU0NzIzMDM0NmI=";

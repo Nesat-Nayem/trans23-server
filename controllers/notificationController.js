@@ -22,21 +22,21 @@ const sendPushNotifications = async (req, res, next) => {
                 title: req.body.title,
                 body: req.body.message
             },
-            // data:{
-            //     title: req.body.title,
-            //     body: req.body.message
-            // },
+            data:{
+                title: req.body.title,
+                body: req.body.message
+            },
             token: req.body.deviceToken
         };
 
         // Save the notification to the database
-        // const notification = new Notification({
-        //     title: req.body.title,
-        //     message: req.body.message,
-        //     deviceToken: req.body.deviceToken,
-        //     phone:req.body.phone
-        // });
-        // await notification.save();
+        const notification = new Notification({
+            title: req.body.title,
+            message: req.body.message,
+            deviceToken: req.body.deviceToken,
+            phone:req.body.phone
+        });
+        await notification.save();
 
 
 
