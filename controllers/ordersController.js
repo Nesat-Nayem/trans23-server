@@ -6,7 +6,7 @@ const { distance } = require("../util/distancefinder");
 const { getCoordinatesFromPincode } = require("../util/geocode");
 const VendorPayment = require("../models/vendor/vendorPaymentModel");
 // const multiNotificationSend = require("./notificationMultipleController");
-const {multiNotificationSend} = require("./notificationController");
+const { multiNotificationSend } = require("./notificationController");
 
 const findFrancies = async (req, res) => {
 
@@ -202,35 +202,35 @@ const postOrders = async (req, res) => {
       .map(async (location) => {
         const { lat: locLat, long: locLong, userId, name, device_token } = location;
         const dist = await distance(lat, lng, locLat, locLong);
-        return { userId, name,device_token, lat: locLat, long: locLong, distance: dist };
+        return { userId, name, device_token, lat: locLat, long: locLong, distance: dist };
       }))
       .then((locations) => locations.sort((a, b) => a.distance - b.distance))
       .then((sortedLocations) => sortedLocations.slice(0, 5));
 
-      // const device_token = nearestLocations
+    // const device_token = nearestLocations
 
     // console.log("vendor nearest object check", nearestLocations)
 
     const deviceTokenArray = nearestLocations.map(device => device.device_token);
-// console.log(deviceTokenArray);
+    // console.log(deviceTokenArray);
 
-// notification send
+    // notification send
 
- // Now call multiNotificationSend function with specific data
- const mockReq = {
-  body: {
-    tokens: deviceTokenArray,
-    // tokens: ['token1', 'token2', 'token3'],
-    title: 'New Order',
-    body: 'Please Check Details And Accept Soon!',
-  },
-};
+    // Now call multiNotificationSend function with specific data
+    const mockReq = {
+      body: {
+        tokens: deviceTokenArray,
+        // tokens: ['token1', 'token2', 'token3'],
+        title: 'New Order',
+        body: 'Please Check Details And Accept Soon!',
+      },
+    };
 
-// const mockRes = {
-//   send: (message, data) => console.log("chck notification response",message, data),
-// };
+    // const mockRes = {
+    //   send: (message, data) => console.log("chck notification response",message, data),
+    // };
 
-const notificationsend = await multiNotificationSend(mockReq);
+    const notificationsend = await multiNotificationSend(mockReq);
 
 
     const order = new Orders({
@@ -256,14 +256,14 @@ const notificationsend = await multiNotificationSend(mockReq);
 };
 
 
-const accept_order = async(req,res) =>{
-  const {orderId, vendorId} = req.body;
+const accept_order = async (req, res) => {
+  const { orderId, vendorId } = req.body;
 
   try {
 
     const order = await Orders.findOneAndUpdate(
       { _id: orderId, vendor_id: { $eq: null } }, // update only if vendor_id is null
-      { $set: { vendor_id: vendorId, status:"processing" } }, // set updated vendor_id and status
+      { $set: { vendor_id: vendorId, status: "processing" } }, // set updated vendor_id and status
       { new: true } // return updated document
     );
 
@@ -279,11 +279,11 @@ const accept_order = async(req,res) =>{
       message: 'Accepted please proced this order form your order details page',
       // order,
     });
-    
+
   } catch (error) {
     return res.status(500).json({
-      success:false,
-      message:error.message
+      success: false,
+      message: error.message
     })
   }
 }
@@ -295,12 +295,18 @@ const reportOrders = async (req, res) => {
     const { startDate, endDate } = req.query;
     console.log("check date", startDate, endDate);
     const query = {};
-    if (startDate && endDate) {
+    // if (startDate && endDate) {
+    //   query.createdAt = {
+    //     $gte: new Date(startDate),
+    //     $lte: new Date(endDate),
+    //   };
+    // }
+
+    if (startDate && endDate) { 
       query.createdAt = {
-        $gte: new Date(startDate),
-        $lte: new Date(endDate),
-      };
-    }
+         $gte: new Date(startDate + "T00:00:00"),
+          $lte: new Date(endDate + "T23:59:59"), 
+        }; }
 
     const order = await Orders.find(query);
     res.json(order.reverse());
@@ -308,6 +314,8 @@ const reportOrders = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+
 
 const cleanOrders = async (req, res) => {
   try {
@@ -340,11 +348,11 @@ const getOrders = async (req, res) => {
     if (vendor_id) {
       query.vendor_id = vendor_id;
     }
-    else if (pincode){
+    else if (pincode) {
       query["movers_packers.from.pincode"] = pincode
       query["vendor_id"] = { $eq: null };
     }
-    if(status){
+    if (status) {
       query.status = status
     }
 
@@ -392,28 +400,28 @@ const getOrders = async (req, res) => {
 // };
 
 
-const getSingleOrder = async(req,res)=>{
+const getSingleOrder = async (req, res) => {
   try {
     const id = req.params._id
-    const order = await Orders.findOne({_id:id});
-    if(!order){
-    return res.status(400).json({
-        success:false,
-        message:"order not folund"
+    const order = await Orders.findOne({ _id: id });
+    if (!order) {
+      return res.status(400).json({
+        success: false,
+        message: "order not folund"
       })
     }
 
     res.status(200).json({
-      success:true,
-      data:order
+      success: true,
+      data: order
     })
 
 
-    
+
   } catch (error) {
     res.status(500).json({
-      success:false,
-      message:error.message
+      success: false,
+      message: error.message
     })
   }
 }
@@ -432,7 +440,7 @@ const getvendorbalance = async (req, res) => {
 
     // Fetch all orders for the vendor
     const orders = await Orders.find(query);
-// console.log("query test", query)
+    // console.log("query test", query)
     const vendorpayment = await VendorPayment.find(query);
     // console.log('test vendor', vendorpayment)
 
@@ -474,7 +482,7 @@ const getvendorbalance = async (req, res) => {
       pending_earning: pendingEarning,
       monthly_earning: monthlyEarning,
       // settlement:vendorpayment?.data
-      settlement:vendorpayment
+      settlement: vendorpayment
     });
   } catch (error) {
     res.status(500).json({ error: error.message });

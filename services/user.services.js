@@ -43,15 +43,16 @@ async function createNewOTP(params, callback) {
     const ttl = 5 * 60 * 1000;
     const expires = Date.now() + ttl;
     const mdata = `${params.phone}.${otp}.${expires}`;
-    const hash = crypto.createHmac("sha256", key).update(mdata).digest("hex");
-    const fullHash = { mdata: `${hash}.${expires}`, devpass: otp };
+    const hashs = crypto.createHmac("sha256", key).update(mdata).digest("hex");
+    const fullHash = { mdata: `${hashs}.${expires}`, devpass: otp };
 
-    var msg = urlencode(
-      `Hello User,%n %nUse OTP ${otp} to log in to your trans23 account. Do not share your OTP with anyone to keep your account safe.%n %nRegards,%nTrans23 Transportation`
-    );
     // var msg = urlencode(
-    //   `Trans23: Your Login OTP code is ${otp} ${hash}`
+    //   `Hello User,%n %nUse OTP ${otp} to log in to your trans23 account. Do not share your OTP with anyone to keep your account safe.%n %nRegards,%nTrans23 Transportation`
     // );
+const hash = "12323233456"
+    var msg = urlencode(
+      `Trans23 Your Login OTP ${otp} ${hash}`
+    );
 
     var number = `+91${params.phone}`;
     var apikey = "NmI3NTRkNTU3ODM3NWE2ZjRiN2E0YjU0NzIzMDM0NmI=";

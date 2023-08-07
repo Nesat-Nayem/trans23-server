@@ -148,7 +148,8 @@ router.patch(
 router.patch("/order/:id", updateOrder);
 router.get("/single-order/:_id", getSingleOrder)
 
-router.get("/report-orders", checkAdmin, reportOrders);
+// router.get("/report-orders", checkAdmin, reportOrders);
+router.get("/report-orders", reportOrders);
 
 // app dashboard
 // slider iamge
