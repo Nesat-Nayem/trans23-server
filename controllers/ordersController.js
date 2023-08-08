@@ -292,21 +292,19 @@ const accept_order = async (req, res) => {
 
 const reportOrders = async (req, res) => {
   try {
-    const { startDate, endDate } = req.query;
-    console.log("check date", startDate, endDate);
+    const { startDate, endDate, service } = req.query;
+    // console.log("check date", startDate, endDate);
     const query = {};
-    // if (startDate && endDate) {
-    //   query.createdAt = {
-    //     $gte: new Date(startDate),
-    //     $lte: new Date(endDate),
-    //   };
-    // }
 
     if (startDate && endDate) { 
       query.createdAt = {
          $gte: new Date(startDate + "T00:00:00"),
           $lte: new Date(endDate + "T23:59:59"), 
         }; }
+        
+if (service) {
+  query.service = service;
+}
 
     const order = await Orders.find(query);
     res.json(order.reverse());
