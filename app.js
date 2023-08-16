@@ -7,7 +7,7 @@ const cookieParser = require("cookie-parser");
 const http = require("http").createServer(app);
 const socketIO = require("socket.io")(http, {
   cors: {
-    origin: ["http://localhost:3000", "http://dashboard.trans23.com", "http://franchises.trans23.com"], // use your actual domain name (or localhost), using * is not recommended
+    origin: ["http://localhost:3000", "https://dashboard.trans23.com", "https://franchises.trans23.com"], // use your actual domain name (or localhost), using * is not recommended
 
     credentials: true,
   },

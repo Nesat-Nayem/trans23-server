@@ -35,7 +35,7 @@ const franciesSchema = new Schema(
       require: true,
     },
     service: {
-      type: String,
+      type: Array,
     },
 
     // pincode:{

@@ -255,7 +255,7 @@ router.delete("/applience/:id", checkAdmin, modifyApplience);
 
 router.post("/franciesSingUp", franciesSingUp);
 
-router.post("/franciesSingIn", franciesSingIn);
+router.post("/francies-singin", franciesSingIn);
 
 router.get("/allfrancies", getallFrancies);
 
