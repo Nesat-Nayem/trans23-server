@@ -80,6 +80,7 @@ const { paymentmanage, paymentresponse, checkStatus } = require("../controllers/
 const vendorNotificationHandalar = require("../controllers/vendor/notificationVendorController");
 const vendorPaymentHandalar = require("../controllers/vendor/vendorPaymentController");
 const { sendPushNotifications, getNotifications } = require("../controllers/notificationController");
+const { subscriptionManage, subscriptionresponse, subscriptioncheckStatus } = require("../controllers/subscription/subscriptionController");
 
 
 
@@ -317,6 +318,12 @@ router.post("/payment/pay", paymentmanage)
 router.post("/payment/response", paymentresponse)
 
 router.get("/payment/check-status", checkStatus)
+
+// subscription
+
+router.post('/subscription/pay', subscriptionManage)
+router.post('/subscription/response',subscriptionresponse)
+router.get('/subscription/check-status',subscriptioncheckStatus)
 
 
 // vendor notification
