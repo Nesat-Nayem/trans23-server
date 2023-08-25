@@ -1,6 +1,6 @@
 
 const mongoose = require('mongoose');
-const { nearestfranciesforvendor } = require('../controllers/ordersController');
+const { nearestfranciesforvendor , nearestPincode} = require('../controllers/ordersController');
 
 var vendorDetailsSchema = new mongoose.Schema({
 
@@ -115,24 +115,40 @@ vendorDetailsSchema.pre('save', async function(next) {
 
 // set francies 
 
+  // const { pincode } = this;
+  // try { 
+  //   const nearestFrancies = await nearestfranciesforvendor(pincode);
+  //   if (nearestFrancies && nearestFrancies.length > 0) {  
+  //     // console.log("check here id under",nearestFrancies )
+  //     this.franciesId = nearestFrancies[0]._id; // Use _id instead of id
+  //   }
+  // } catch (error) {
+  //   console.error(error);
+  //   // Handle the error appropriately
+  // }
+    next();
+});
+
+
+vendorDetailsSchema.pre("save", async function (next) {
   const { pincode } = this;
   try { 
     const nearestFrancies = await nearestfranciesforvendor(pincode);
-    if (nearestFrancies && nearestFrancies.length > 0) {  
+    if (nearestFrancies && nearestFrancies.length > 0 && nearestFrancies[0]._id) {  
       // console.log("check here id under",nearestFrancies )
       this.franciesId = nearestFrancies[0]._id; // Use _id instead of id
+    } else {
+      // Throw an error or return a validation message
+      throw new Error("FranciesId is required");
+      // or
+      // return next(new Error("FranciesId is required"));
     }
   } catch (error) {
     console.error(error);
     // Handle the error appropriately
   }
-
-
-
-    next();
+  next();
 });
-
-
 
 // set long lat 
 

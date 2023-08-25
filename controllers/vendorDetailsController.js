@@ -12,8 +12,28 @@ const VendorDetailsHandalar = async (req, res) => {
       });
     } else if (req.method === "GET") {
 
-      const userId = req.query.userId;
-      const vendordetails = await VendorDetails.findOne({ userId });
+      // let query = {}
+      // const userId = req.query.userId;
+      // const vendordetails = await VendorDetails.find(query);
+      const query = req.query;
+      let vendordetails;
+      if (Object.keys(query).length === 0) {
+        // query object is empty, show all
+        vendordetails = await VendorDetails.find();
+      } else {
+        // query object is not empty, filter by query
+        if (query.userId) {
+          // query object has userId field, use findOne method
+          vendordetails = await VendorDetails.findOne(query);
+        } else {
+          // query object does not have userId field, use find method
+          vendordetails = await VendorDetails.find(query);
+        }
+      }
+      // rest of the code
+      
+      
+
       if (vendordetails) {
         // id found, data send
         res.status(200).json({
