@@ -237,7 +237,7 @@ const postOrders = async (req, res) => {
       ...req.body,
       // vendor_id: nearestLocations[0].userId,
       vendor_id: null,
-      // francies_id: '645b80b977d8de19e8da1cb1',
+      francies_id: null,
     });
 
     const result = await order.save();
@@ -257,13 +257,13 @@ const postOrders = async (req, res) => {
 
 
 const accept_order = async (req, res) => {
-  const { orderId, vendorId } = req.body;
+  const { orderId, vendorId, franciesId } = req.body;
 
   try {
 
     const order = await Orders.findOneAndUpdate(
-      { _id: orderId, vendor_id: { $eq: null } }, // update only if vendor_id is null
-      { $set: { vendor_id: vendorId, status: "processing" } }, // set updated vendor_id and status
+      { _id: orderId, vendor_id: { $eq: null } }, 
+      { $set: { vendor_id: vendorId, status: "processing", francies_id:franciesId } },
       { new: true } // return updated document
     );
 

@@ -39,6 +39,7 @@ const orderSchema = new mongoose.Schema(
     status: String,
     message: String,
     vendor_id: String,
+    francies_id: String,
 
     movers_packers: {
       with_in_city: Boolean,
