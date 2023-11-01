@@ -41,7 +41,6 @@
     "path": "^0.12.7",
     "slugify": "^1.6.5",
     "socket.io": "^4.6.0",
-    "stripe": "^8.191.0",
     "urlencode": "^1.1.0",
     "validator": "^13.7.0"
   }

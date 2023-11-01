@@ -81,11 +81,11 @@ const vendorNotificationHandalar = require("../controllers/vendor/notificationVe
 const vendorPaymentHandalar = require("../controllers/vendor/vendorPaymentController");
 const { sendPushNotifications, getNotifications } = require("../controllers/notificationController");
 const { subscriptionManage, subscriptionresponse, subscriptioncheckStatus } = require("../controllers/subscription/subscriptionController");
+const { paymentmanagetest } = require("../controllers/payment/paymentControllerTest");
 
 
 
 const router = express.Router();
-
 
 // const storage = multer.memoryStorage()
 // const upload = multer({ storage: storage })
@@ -315,6 +315,7 @@ router.get("/vendor/earning", getvendorbalance)
 
 
 router.post("/payment/pay", paymentmanage)
+router.post("/payment/paytest", paymentmanagetest)
 router.post("/payment/response", paymentresponse)
 
 router.get("/payment/check-status", checkStatus)

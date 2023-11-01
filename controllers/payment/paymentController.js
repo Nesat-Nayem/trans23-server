@@ -6,18 +6,18 @@ const paymentmanage = async (req, res) => {
   const test = req.body.test;
 
   const data = {
-    merchantId: test ? "MERCHANTUAT" : process.env.MARCENT_ID,
+    merchantId: test ? "PGTESTPAYUAT" : process.env.MARCENT_ID,
     merchantTransactionId: req.body.transection_id,
     merchantUserId: "jlkjkoeirue",
     amount: req.body.amount * 100,
     redirectUrl: test
-      ? `https://server.trans23.com/api/payment/response?test=${req.body.test}&transactionId=${req.body.transection_id}`
-      : `https://server.trans23.com/api/payment/response?test=${req.body.test}&transactionId=${req.body.transection_id}`,
+      ? `http://localhost:7070/api/payment/response?test=${req.body.test}&transactionId=${req.body.transection_id}`
+      : `http://localhost:7070/api/payment/response?test=${req.body.test}&transactionId=${req.body.transection_id}`,
     redirectMode: "POST",
     callbackUrl: test
-      ? "https://server.trans23.com/payment/response"
-      : "https://server.trans23.com/api/payment/response",
-    mobileNumber: test ? "9021557095" : req.body.phone,
+      ? "http://localhost:7070/payment/response"
+      : "http://localhost:7070/api/payment/response",
+    mobileNumber: test ? "9090557095" : req.body.phone,
     paymentInstrument: {
       type: "PAY_PAGE",
     },
@@ -73,7 +73,7 @@ const paymentresponse = async (req, res) => {
   console.log("payment", req.query);
 
   res.redirect(
-    `https://server.trans23.com/api/payment/check-status?test=${req.query.test}&transactionId=${req.query.transactionId}`
+    `http://localhost:7070/api/payment/check-status?test=${req.query.test}&transactionId=${req.query.transactionId}`
   );
 };
 
@@ -87,7 +87,7 @@ const checkStatus = async (req, res) => {
   const transactionId = req.query.transactionId;
   console.log("check", test, transactionId);
 
-  const merchantId = test ? "MERCHANTUAT" : process.env.MARCENT_ID;
+  const merchantId = test ? "PGTESTPAYUAT" : process.env.MARCENT_ID;
 
   const apiUrl = test
     ? `https://api-preprod.phonepe.com/apis/merchant-simulator/pg/v1/status/${merchantId}/${transactionId}`
@@ -135,5 +135,3 @@ module.exports = {
   checkStatus,
 };
 
-
-// d30390479afdba6955f0e0907ad8cf2fb56926b56b84107592cff3b8f271c950###1
