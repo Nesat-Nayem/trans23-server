@@ -11,12 +11,12 @@ const paymentmanage = async (req, res) => {
     merchantUserId: "jlkjkoeirue",
     amount: req.body.amount * 100,
     redirectUrl: test
-      ? `http://localhost:7070/api/payment/response?test=${req.body.test}&transactionId=${req.body.transection_id}`
-      : `http://localhost:7070/api/payment/response?test=${req.body.test}&transactionId=${req.body.transection_id}`,
+      ? `https://server.trans23.com/api/payment/response?test=${req.body.test}&transactionId=${req.body.transection_id}`
+      : `https://server.trans23.com/api/payment/response?test=${req.body.test}&transactionId=${req.body.transection_id}`,
     redirectMode: "POST",
     callbackUrl: test
-      ? "http://localhost:7070/payment/response"
-      : "http://localhost:7070/api/payment/response",
+      ? "https://server.trans23.com/payment/response"
+      : "https://server.trans23.com/api/payment/response",
     mobileNumber: test ? "9090557095" : req.body.phone,
     paymentInstrument: {
       type: "PAY_PAGE",
@@ -73,7 +73,7 @@ const paymentresponse = async (req, res) => {
   console.log("payment", req.query);
 
   res.redirect(
-    `http://localhost:7070/api/payment/check-status?test=${req.query.test}&transactionId=${req.query.transactionId}`
+    `https://server.trans23.com/api/payment/check-status?test=${req.query.test}&transactionId=${req.query.transactionId}`
   );
 };
 

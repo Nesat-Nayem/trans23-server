@@ -15,14 +15,14 @@ const subscriptionManage = async (req, res) => {
     redirectUrl: test
     //   ? `https://server.trans23.com/api/payment/response?test=${req.body.test}&transactionId=${req.body.transection_id}`
     //   : `https://server.trans23.com/api/payment/response?test=${req.body.test}&transactionId=${req.body.transection_id}`,
-      ? `http://localhost:7070/api/subscription/response?test=${req.body.test}&transactionId=${req.body.transection_id}`
-      : `http://localhost:7070/api/subscription/response?test=${req.body.test}&transactionId=${req.body.transection_id}`,
+      ? `https://server.trans23.com/api/subscription/response?test=${req.body.test}&transactionId=${req.body.transection_id}`
+      : `https://server.trans23.com/api/subscription/response?test=${req.body.test}&transactionId=${req.body.transection_id}`,
     redirectMode: "POST",
     callbackUrl: test
     //   ? "https://server.trans23.com/payment/response"
     //   : "https://server.trans23.com/api/payment/response",
-      ? "http://localhost:7070/api/subscription/response"
-      : "http://localhost:7070/api/subscription/response",
+      ? "https://server.trans23.com/api/subscription/response"
+      : "https://server.trans23.com/api/subscription/response",
     mobileNumber: test ? "9021557095" : req.body.phone,
     paymentInstrument: {
       type: "PAY_PAGE",
