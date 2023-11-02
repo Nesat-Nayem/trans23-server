@@ -37,6 +37,7 @@ const orderSchema = new mongoose.Schema(
     service: String,
     type: String,
     status: String,
+    order_cancel_reason: String,
     message: String,
     vendor_id: String,
     francies_id: String,
