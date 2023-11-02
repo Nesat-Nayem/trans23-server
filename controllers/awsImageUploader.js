@@ -195,7 +195,7 @@ const miltipleImageUploadS3 = async (req, res) => {
           await s3.send(new PutObjectCommand(params));
   
           // Generate the URL for the uploaded file
-          url = `https://your-bucket-name.s3.amazonaws.com/${imageName}`; // Assign the value to the url variable
+          url = `https://trans-all-files.s3.ap-south-1.amazonaws.com/${imageName}`; // Assign the value to the url variable
           urls.push(url);
         }
   
