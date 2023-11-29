@@ -218,7 +218,49 @@ async function resendOtp(params, callback) {
   const testopt = otp;
 }
 
+
+
+
+
+// async function verifyOTP(params, callback) {
+//   let [hashValue, expires] = params.hash.split(".");
+//   let now = Date.now();
+//   if (now > parseInt(expires)) return callback("OTP Expired");
+//   let mdata = `${params.phone}.${params.otp}.${expires}`;
+//   let newCalculatedHash = crypto
+//     .createHmac("sha256", key)
+//     .update(mdata)
+//     .digest("hex");
+//   // if (newCalculatedHash === hashValue) {
+//   //   return callback(null, "Success");
+//   // }
+//   if (newCalculatedHash === hashValue) {
+//     // OTP verification successful - generate JWT token
+//     const token = jwt.sign({ userId: hashValue }, process.env.JWT_SECRET);
+//     // console.log("user check", params.hash)
+//     return callback(null, {
+//       message: "Success",
+//       access_token: token,
+//       userId: hashValue,
+//     });
+//   }
+//   return callback("Invalid OTP");
+// }
+
+
 async function verifyOTP(params, callback) {
+  // Check for test phone and otp
+  if(params.phone == "11111111111" && params.otp == "1111") {
+    // Test login successful - generate JWT token
+    const testUserId = "test_user_id"; // You can set this to a dummy user ID for test login
+    const token = jwt.sign({ userId: testUserId }, process.env.JWT_SECRET);
+    return callback(null, {
+      message: "Success",
+      access_token: token,
+      userId: testUserId,
+    });
+  }
+
   let [hashValue, expires] = params.hash.split(".");
   let now = Date.now();
   if (now > parseInt(expires)) return callback("OTP Expired");
@@ -227,13 +269,10 @@ async function verifyOTP(params, callback) {
     .createHmac("sha256", key)
     .update(mdata)
     .digest("hex");
-  // if (newCalculatedHash === hashValue) {
-  //   return callback(null, "Success");
-  // }
+
   if (newCalculatedHash === hashValue) {
     // OTP verification successful - generate JWT token
     const token = jwt.sign({ userId: hashValue }, process.env.JWT_SECRET);
-    // console.log("user check", params.hash)
     return callback(null, {
       message: "Success",
       access_token: token,
@@ -242,6 +281,11 @@ async function verifyOTP(params, callback) {
   }
   return callback("Invalid OTP");
 }
+
+
+
+
+
 
 // const getUser = async() =>{
 //   const user = await User.find({})
