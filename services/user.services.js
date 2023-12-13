@@ -250,7 +250,7 @@ async function resendOtp(params, callback) {
 
 async function verifyOTP(params, callback) {
   // Check for test phone and otp
-  if(params.phone == "11111111111" && params.otp == "1111") {
+  if(params.phone == "1111111111" && params.otp == "1111") {
     // Test login successful - generate JWT token
     const testUserId = "test_user_id"; // You can set this to a dummy user ID for test login
     const token = jwt.sign({ userId: testUserId }, process.env.JWT_SECRET);
