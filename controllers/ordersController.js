@@ -174,10 +174,92 @@ const statusAndOutstandingAmt = async (req, res) => {
 
 
 
+// const postOrders = async (req, res) => {
+//   const { movers_packers, storage, courier, vehicle_transport } = req.body;
+//   let pincode;
+
+//   if (movers_packers) {
+//     pincode = movers_packers.from.pincode;
+//   } else if (storage) {
+//     pincode = storage.address.pincode;
+//   } else if (courier) {
+//     pincode = courier.from.pincode;
+//   } else if (vehicle_transport) {
+//     pincode = vehicle_transport.from.pincode;
+//   }
+
+//   // console.log(pincode);
+
+//   try {
+//     const { lat, lng } = await getCoordinatesFromPincode(pincode);
+//     // const franciesAccount = await mongoose.model('FranciesAccount').find({}, 'id username long lat');
+
+//     const vendorDetails = await mongoose.model('VendorDetails').find({}, 'long lat name userId device_token')
+
+
+
+//     const nearestLocations = await Promise.all(vendorDetails
+//       .map(async (location) => {
+//         const { lat: locLat, long: locLong, userId, name, device_token } = location;
+//         const dist = await distance(lat, lng, locLat, locLong);
+//         return { userId, name, device_token, lat: locLat, long: locLong, distance: dist };
+//       }))
+//       .then((locations) => locations.sort((a, b) => a.distance - b.distance))
+//       .then((sortedLocations) => sortedLocations.slice(0, 5));
+
+//     // const device_token = nearestLocations
+
+//     // console.log("vendor nearest object check", nearestLocations)
+
+//     const deviceTokenArray = nearestLocations.map(device => device.device_token);
+//     // console.log(deviceTokenArray);
+
+//     // notification send
+
+//     // Now call multiNotificationSend function with specific data
+//     const mockReq = {
+//       body: {
+//         tokens: deviceTokenArray,
+//         // tokens: ['token1', 'token2', 'token3'],
+//         title: 'New Order',
+//         body: 'Please Check Details And Accept Soon!',
+//       },
+//     };
+
+//     // const mockRes = {
+//     //   send: (message, data) => console.log("chck notification response",message, data),
+//     // };
+
+//     const notificationsend = await multiNotificationSend(mockReq);
+
+
+//     const order = new Orders({
+//       ...req.body,
+//       // vendor_id: nearestLocations[0].userId,
+//       vendor_id: null,
+//       francies_id: null,
+//     });
+
+//     const result = await order.save();
+
+//     // Send the response immediately after saving the order
+//     res.status(200).json({
+//       success: true,
+//       message: "Received order successfully",
+//     });
+
+
+
+//   } catch (error) {
+//     res.status(500).json({ error: error.message });
+//   }
+// };
+
 const postOrders = async (req, res) => {
   const { movers_packers, storage, courier, vehicle_transport } = req.body;
   let pincode;
 
+  // Determine which pincode to use based on the service type
   if (movers_packers) {
     pincode = movers_packers.from.pincode;
   } else if (storage) {
@@ -188,72 +270,35 @@ const postOrders = async (req, res) => {
     pincode = vehicle_transport.from.pincode;
   }
 
+  // Simply log the pincode for now. You could remove this if not needed.
   // console.log(pincode);
 
   try {
-    const { lat, lng } = await getCoordinatesFromPincode(pincode);
-    // const franciesAccount = await mongoose.model('FranciesAccount').find({}, 'id username long lat');
-
-    const vendorDetails = await mongoose.model('VendorDetails').find({}, 'long lat name userId device_token')
-
-
-
-    const nearestLocations = await Promise.all(vendorDetails
-      .map(async (location) => {
-        const { lat: locLat, long: locLong, userId, name, device_token } = location;
-        const dist = await distance(lat, lng, locLat, locLong);
-        return { userId, name, device_token, lat: locLat, long: locLong, distance: dist };
-      }))
-      .then((locations) => locations.sort((a, b) => a.distance - b.distance))
-      .then((sortedLocations) => sortedLocations.slice(0, 5));
-
-    // const device_token = nearestLocations
-
-    // console.log("vendor nearest object check", nearestLocations)
-
-    const deviceTokenArray = nearestLocations.map(device => device.device_token);
-    // console.log(deviceTokenArray);
-
-    // notification send
-
-    // Now call multiNotificationSend function with specific data
-    const mockReq = {
-      body: {
-        tokens: deviceTokenArray,
-        // tokens: ['token1', 'token2', 'token3'],
-        title: 'New Order',
-        body: 'Please Check Details And Accept Soon!',
-      },
-    };
-
-    // const mockRes = {
-    //   send: (message, data) => console.log("chck notification response",message, data),
-    // };
-
-    const notificationsend = await multiNotificationSend(mockReq);
-
-
+    // No need to fetch the coordinates or find vendors if we're not sending notifications
+    // Create a new order from the request body
     const order = new Orders({
       ...req.body,
-      // vendor_id: nearestLocations[0].userId,
+      // Assuming default values for vendor_id and francies_id are 'null', otherwise set them accordingly
       vendor_id: null,
       francies_id: null,
     });
 
+    // Save the new order to the database
     const result = await order.save();
 
-    // Send the response immediately after saving the order
+    // Respond to the client that the order was saved successfully
     res.status(200).json({
       success: true,
       message: "Received order successfully",
+      order: result // Optionally return the saved order
     });
 
-
-
   } catch (error) {
+    // If an error occurs, respond to the client with the error message
     res.status(500).json({ error: error.message });
   }
 };
+
 
 
 const accept_order = async (req, res) => {
@@ -333,6 +378,7 @@ const getOrders = async (req, res) => {
     const service = req.query.service;
     const type = req.query.type;
     const vendor_id = req.query.vendor_id;
+    const francies_id = req.query.francies_id;
     const status = req.query.status
     const pincode = req.query.pincode
 
@@ -345,6 +391,9 @@ const getOrders = async (req, res) => {
     }
     if (vendor_id) {
       query.vendor_id = vendor_id;
+    }
+    if (francies_id) {
+      query.francies_id = francies_id;
     }
     else if (pincode) {
       query["movers_packers.from.pincode"] = pincode
@@ -396,6 +445,47 @@ const getOrders = async (req, res) => {
 //     res.status(500).json({ error: error.message });
 //   }
 // };
+
+
+const getunacceptedorder = async(req, res) => {
+  // Default values for pagination
+  const pageSize = 10;
+  let page = req.query.page ? parseInt(req.query.page) : 1;
+  
+  // Correct page number in case it is lower than 1
+  if (page < 1) page = 1;
+
+  try {
+    // Pagination: skip() and limit() methods are used for pagination
+    const orders = await Orders.find({ vendor_id: null })
+      .skip((page - 1) * pageSize)
+      .limit(pageSize);
+
+    // For a more advanced implementation, you could also consider returning
+    // the total number of documents matching the condition, which can be helpful for pagination on the front end.
+    const totalOrders = await Orders.countDocuments({ vendor_id: null });
+
+    return res.status(200).json({
+      totalPages: Math.ceil(totalOrders / pageSize),
+      currentPage: page,
+      orders: orders
+    });
+  } catch (error) {
+    return res.status(500).json({ message: 'Error fetching orders', error });
+  }
+}
+
+
+
+
+// const getunacceptedorder = async(req,res)=>{
+//   try {
+//     const orders = await Orders.find({ vendorId: null });
+//     return res.status(200).json(orders);
+//   } catch (error) {
+//     return res.status(500).json({ message: 'Error fetching orders', error });
+//   }
+// }
 
 
 const getSingleOrder = async (req, res) => {
@@ -539,5 +629,6 @@ module.exports = {
   getvendorbalance,
   reportOrders,
   getSingleOrder,
-  accept_order
+  accept_order,
+  getunacceptedorder
 };

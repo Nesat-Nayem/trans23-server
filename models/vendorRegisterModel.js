@@ -34,8 +34,9 @@ const vendorSchema = new Schema({
 
 
   franciesId: {
-    type: String
-  },
+    type: String,
+    default:"64e0065149985d37881ef276"
+  }
 
 
 }, { timestamps: true })

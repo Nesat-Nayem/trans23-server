@@ -15,6 +15,7 @@ const {
   getvendorbalance,
   getSingleOrder,
   accept_order,
+  getunacceptedorder,
 } = require("../controllers/ordersController");
 
 const {
@@ -25,6 +26,7 @@ const {
   getspacificUser,
   getReffrellCode,
   checkReffrellCode,
+  deleteUser,
   updateUser,
 } = require("../controllers/userController");
 const {
@@ -66,7 +68,7 @@ const { checkUser, checkAdmin } = require("../middlewares/newAuth");
 // const { vehicleImageUploader } = require("../controllers/vehicleImageController");
 
 // const notificationController = require("../controllers/notificationController");
-const { vendorRegister, vendorVerifyOTP, vendorLogin, getVendor, deleteVendor, patchVendor } = require("../controllers/vendorRegisterController");
+const { vendorRegister, vendorCreate, vendorVerifyOTP, vendorLogin, getVendor, deleteVendor, patchVendor } = require("../controllers/vendorRegisterController");
 const { vendorServiceHandalar } = require("../controllers/vendorServiceController");
 const { textmail } = require("../controllers/mailControllers");
 const { VendorDetailsHandalar } = require("../controllers/vendorDetailsController");
@@ -99,6 +101,7 @@ router.get("/user/referral-code/:phone", getReffrellCode);
 router.post("/user/verify-code/:number", checkReffrellCode);
 router.patch("/user/:number", updateUser);
 
+router.delete("/user/remove/:userId", deleteUser);
 router.post("/users/otpLogin", otpLogin);
 
 router.post("/users/verifyOTP", verifyOTP);
@@ -108,6 +111,7 @@ router.post("/users/resendOtp", resendOtp);
 
 // vendor register verify
 
+router.post("/vendor/addownvendor", vendorCreate)
 router.post("/vendor/register", vendorRegister)
 router.post("/vendor/verify", vendorVerifyOTP)
 router.post("/vendor/vendorlogin", vendorLogin)
@@ -127,6 +131,7 @@ router.get("/notification/:phone", getNotifications)
 router.get("/orders", getOrders);
 router.post("/orders", checkUser, postOrders);
 router.patch("/accept-order", accept_order)
+router.get("/unaccept-order", getunacceptedorder)
 
 router.delete("/orders/clean", checkAdmin, cleanOrders);
 

@@ -15,6 +15,8 @@ const mongoose = require("mongoose")
 //   });
 // };
 
+
+
 exports.otpLogin = (req, res, next) => {
   userServices.createNewOTP(req.body, (error, results) => {
     if (error) {
@@ -33,6 +35,35 @@ exports.otpLogin = (req, res, next) => {
       });
     }
   });
+};
+
+
+
+exports.deleteUser = async (req, res, next) => {
+  try {
+    const { userId } = req.params; // Get user ID from URL parameter
+
+    // Find user by ID and delete
+    const deletedUser = await User.findByIdAndDelete(userId);
+
+    if (!deletedUser) {
+      // User not found
+      res.status(404).json({success:false, message: "User not found." });
+      return;
+    }
+
+    // User deleted successfully
+    res.status(200).json({success:true, message: "User deleted successfully." });
+  } catch (err) {
+    // Handle errors
+    if (err.name === "CastError") {
+      // Invalid user ID format
+      res.status(400).json({success:false, message: "Invalid user ID format." });
+    } else {
+      // Other errors
+      next(err);
+    }
+  }
 };
 
 

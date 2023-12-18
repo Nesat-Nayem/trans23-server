@@ -79,6 +79,55 @@ exports.vendorRegister = (req, res, next) => {
   });
 };
 
+// exports.vendorCreate = (req, res, next) => {
+
+// };
+
+
+exports.vendorCreate = async (req, res, next) => {
+    try {
+        // Destructure the body data
+        const { name, email, phone, password, franciesId } = req.body;
+
+        // Create a new vendor with the requested data
+        const newVendor = new Vendor({
+            name,
+            email,
+            phone,
+            password,
+            franciesId
+        });
+
+        // Save the vendor asynchronously and wait for the promise to resolve
+        const savedVendor = await newVendor.save();
+
+        // Send back the details of the new vendor with a 201 status code
+        res.status(201).json({
+          success:true,
+          message:"own vendor create success",
+          data:savedVendor});
+    } catch (err) {
+        // Log the error and send an appropriate message or error code
+        console.error(err);
+        
+        // You could add additional checks for different types of errors and customize the responses here
+        if(err.code === 11000){
+            // Handle duplicate key errors separately
+            res.status(409).json({
+                message: 'A vendor with the given email or phone already exists.',
+                error: err.keyValue
+            });
+        } else {
+            // For other errors, send a generic 500 Internal Server Error
+            res.status(500).json({
+                message: 'Failed to create a new vendor.',
+                error: err.message
+            });
+        }
+    }
+};
+
+
 
 exports.vendorVerifyOTP = (req, res, next) => {
   vendorService.verifyOTP(req.body, (error, results) => {
@@ -116,18 +165,60 @@ exports.vendorVerifyOTP = (req, res, next) => {
 // }
 
 
+
+// exports.getVendor = async (req, res) => {
+//   try {
+//     const _id = req.query.userId;
+//     let vendordetails;
+  
+//     if (_id) {
+//       vendordetails = await Vendor.findOne({ _id }); // Use findOne instead of find
+//     } else {
+//       vendordetails = await Vendor.find();
+//     }
+  
+//     if (vendordetails) { // Check if vendordetails is not null or undefined
+//       res.status(200).json({
+//         success: true,
+//         message: "Data retrieved successfully",
+//         data: vendordetails,
+//       });
+//     } else {
+//       res.status(404).json({
+//         success: false,
+//         message: "Not Found",
+//       });
+//     }
+  
+//   } catch (error) {
+//     res.status(500).json({
+//       message: error.message
+//     });
+//   }
+// }
+
+
 exports.getVendor = async (req, res) => {
   try {
-    const _id = req.query.userId;
-    let vendordetails;
-  
-    if (_id) {
-      vendordetails = await Vendor.findOne({ _id }); // Use findOne instead of find
-    } else {
-      vendordetails = await Vendor.find();
+    const franciesId = req.query.franciesId;
+    const filterQuery = {};
+
+    if (franciesId) filterQuery.franciesId = franciesId;
+    if (Object.keys(req.query).length > 0) {
+      // Add conditions for other filters using the same pattern
+      const keyValuePairs = req.query;
+      for (const [key, value] of Object.entries(keyValuePairs)) {
+        if (key === "name" || key === "phone") {
+          filterQuery[key] = { $regex: value, $options: "i" };
+        } else {
+          filterQuery[key] = value;
+        }
+      }
     }
-  
-    if (vendordetails) { // Check if vendordetails is not null or undefined
+
+    const vendordetails = await Vendor.find(filterQuery);
+
+    if (vendordetails.length > 0) {
       res.status(200).json({
         success: true,
         message: "Data retrieved successfully",
@@ -136,16 +227,16 @@ exports.getVendor = async (req, res) => {
     } else {
       res.status(404).json({
         success: false,
-        message: "Not Found",
+        message: "No vendors found with the requested filters.",
       });
     }
-  
+
   } catch (error) {
     res.status(500).json({
-      message: error.message
+      message: error.message,
     });
   }
-}
+};
 
 
 exports.patchVendor = async (req, res) => {
